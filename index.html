@@ -28,7 +28,7 @@
             <li><a href="#planning1">Planning</a></li>
             <li><a href="#prison1">Extra</a></li>
             <li><a href="#credits1">Credits</a></li>
-            <li><a href="">Github Repo</a></li>
+            <li><a href="https://github.com/Syvven/CSCI5611HW1">Github Repo</a></li>
         </ul>
         <pe id="collision1"></pe>
     
@@ -43,9 +43,19 @@
                 <video controls autoplay loop muted src="data/exercise1.mp4" alt="Cat flying around in space chasing after computer mouse" width="600" height="320"></video>
             
                 <div class="container">
-                    <p>Clogs are a type of footwear made in part or completely from wood. Used worldwide, their forms can vary by culture, but often remained unchanged for centuries within a culture. 
-                    <br>
-                    Traditional clogs remain in use as protective footwear in agriculture and in some factories and mines. Although they are sometimes negatively associated with cheap and folkloric footwear of farmers and the working class, some types are considered fashion wear today.</p>
+                    <h4>Challenge: Max Acceleration and Sprite Rotation</h4>
+                    <p> 
+                        The guidelines for this challenge were to give the image a maximum acceleration 
+                        as well as drawing a sprite and giving it an orientation. <br>
+                        I implemented the former using the interpolate function given to us and a variable, 
+                        accel, initially set to 0.03. I'm not sure if this was the intended way but it makes it look good, so I kept it.<br>
+                        I implemented the latter first by loading an image of my friends cat. I then gave it a base orientation 
+                        depending on the direction it normally faced. <br>
+                        At each time step, I calculated the angle between the image direction and the current velocity and 
+                        rotated the image that much.  <br>
+                        It leads to a fairly smooth turn as long as you don't move the mouse too much at once. This concern, however,
+                        is addressed in a later part of this homework.
+                    </p>
                     <div class="source">
                         <a href="src/collision.zip">Source Code Zip (Only Collision)</a>
                     </div>
@@ -63,7 +73,19 @@
                 <video controls autoplay loop muted src="data/exercise2.mp4" alt="Fountain of particles changing color based on velocity difference between updates and red ball in scene that can move" width="600" height="320"></video>
 
                 <div class="container">
-                    <p>A kalash' or galesh is a traditional footwear of Iran. The Kurdish cotton kalash is particularly famous in Marivan. Unlike most galoshes, the "galesh" are always handwoven and with specific fabrics. It is what people in Persia used to wear before the proliferation of the modern shoe, especially in the provinces of northern Iran. Galesh are still made today, but in the category of handicrafts and cultural produce.</p>
+                    <h4>Challenge: Delete Old Particles and Change Color</h4>
+                    <p>
+                        The guidelines for this challenge were to delete particles that have been around too long,
+                        change the color of the particles over time, and change the color as a function of the bounce. <br>
+                        Deleting particles was straight forward: turn the position, velocity, life, and color arrays into ArrayLists 
+                        and append / remove when needed. <br>
+                        The same effect could have been achieved using a circular queue structure, and would likely be much faster than ArrayLists, however,
+                        I did not have the time to do that. It might be something I revisit in the future. <br>
+                        Changing the color over time and as a function of the bounce was also straight forward. The latter is demonstrated in the above video. <br>
+                        The particles change color based on the change in velocity between time steps. If the ball hits them hard, they change faster
+                        than just bouncing off the ground or wall. <br>
+                        I also implemented the color change over time, but it is currently commented out because I thought this result looked really pretty!
+                    </p>
                     <div class="source">
                         <a href="src/particles.zip">Source Code Zip (Only Particles)</a>
                     </div>
@@ -80,7 +102,24 @@
                 <hr>
                 <video controls autoplay loop muted src="data/exercise3.mp4" alt="Boid simulation" width="600" height="320"></video>
                 <div class="container">
-                    <p>A moccasin is a shoe, made of deerskin or other soft leather,consisting of a sole (made with leather that has not been "worked") and sides made of one piece of leather, stitched together at the top, and sometimes with a vamp (additional panel of leather). The sole is soft and flexible and the upper part often is adorned with embroidery or beading. Though sometimes worn inside, it is chiefly intended for outdoor use. Historically, it is the footwear of many indigenous people of North America; moreover, hunters, traders, and European settlers wore them. Etymologically, the moccasin derives from the Algonquian language Powhatan word makasin (cognate to Massachusett mohkisson / mokussin, Ojibwa makizin, Mi'kmaq mksɨn),and from the Proto-Algonquian word *maxkeseni (shoe).</p>
+                    <h4>Challenge: Max Force / Velocity, Initial-Collision Handling, and Static Obstacles</h4>
+                    <p>
+                        The guidelines for this challenge were to cap the agents' force and velocity, handle starting position
+                        collisions, and add static obstacles for the agents to avoid. <br>
+                        I achieved the first by creating maxVel and maxAcc variables and if the length of acceleration or velocity vectors
+                        violated those numbers, normalize the vector and multiply it by the corresponding max. <br>
+                        The second was achieved purely by making them be affected by a separation force. <br>
+                        The third was achieved by having an array of obstacles with random positions and performing TTC on them for 
+                        all the agents. <br>
+                        I also achieved this challenge by having the agents not cross the wall boundaries. My initial thought on how to do 
+                        this was to cast rays in an arc and have a force applied to the agent based on the TTC for each of those rays. <br>
+                        This turned out to not be a great solution, however, I, akin to the first exercise, found a better way to do it in 
+                        a later exercise. <br>
+                        This worked very similarily to the agents avoiding the big agents once they reached their goal. <br>
+                        In addition to those, I added attraction and alignment forces to the agents as well as attracting the agents
+                        to the user's mouse position when they left click, and repelling them from the position when they right click. <br>
+
+                    </p>
                     <div class="source">
                         <a href="src/boids.zip">Source Code Zip (Only Boids/TTC)</a>
                     </div>
@@ -100,50 +139,42 @@
                 <img src="data/graph2.jpg" alt="graph" width="390" height="300">
                 <img src="data/graph3.jpg" alt="graph" width="390" height="300">
                 <div class="container">
-                    <p>Sindhi Mojari (or simply Mojari) is a type of handcrafted footwear produced in Pakistan. They are traditionally made by artisans mostly using tanned leather. The uppers are made of one piece of leather or textile embroidered and embellished with brass nails, cowry shells, mirrors, bells and ceramic beads. Even the bonding from the upper to the sole is done by cotton thread that is not only eco-friendly but also enmeshes the leather fibers with great strength. Some product range also uses bright and ornate threads.
-                    <br>
-                    As it evolved through the centuries and is being produced by individual artisans, products vary in designs and colours. It encapsules cultural diversity, local ethos and ethnicity.
+                    <h4>Challenge: Cycle Graph, DLS, and IDDFS</h4>
+                    <p>
+                        The guidelines for this challenge were to create a graph with cycles and see how DFS handles it, make a 
+                        depth limited search algorithm, and make an iterative deepening depth first search algorithm. <br>
+                        The first was done by creating graph 3. Depth first search handled this graph because of the visited list,
+                        so I created another DFS without the visited list and it predictably failed. <br> 
+                        A thing to note about this is that DFS would not fail if used on graph 4 which is functionally similar to 
+                        graph 3, however, the nodes are added in a different order. <br>
+                        Depth Limited Search was done recursively because it was the way I knew how to do it. <br>
+                        Iterative Deepening Depth First Search was implemented on top of the DLS code already written and, predictably, 
+                        does much better than DLS and DFS. <br>
+                        A more in depth explanation of the results of the tests and the tests themselves are available in the comments 
+                        of the source file, <br>
+                        though, I did include some results in the images below.
                     </p>
                 </div>
                 <h4>Using BFS:</h4>
                 <img src="data/BFS1.jpg" alt="results" width="390" height="400">
                 <img src="data/BFS2.jpg" alt="results" width="390" height="400">
                 <img src="data/BFS3.jpg" alt="results" width="390" height="400">
-                <div class="container">
-                    <p>Sindhi Mojari (or simply Mojari) is a type of handcrafted footwear produced in Pakistan. They are traditionally made by artisans mostly using tanned leather. The uppers are made of one piece of leather or textile embroidered and embellished with brass nails, cowry shells, mirrors, bells and ceramic beads. Even the bonding from the upper to the sole is done by cotton thread that is not only eco-friendly but also enmeshes the leather fibers with great strength. Some product range also uses bright and ornate threads.
-                    <br>
-                    As it evolved through the centuries and is being produced by individual artisans, products vary in designs and colours. It encapsules cultural diversity, local ethos and ethnicity.
-                    </p>
-                </div>
+                
                 <h4>Using DFS:</h4>
                 <img src="data/DFS1.jpg" alt="results" width="390" height="400">
                 <img src="data/DFS2.jpg" alt="results" width="390" height="400">
                 <img src="data/DFS3.jpg" alt="results" width="390" height="400">
-                <div class="container">
-                    <p>Sindhi Mojari (or simply Mojari) is a type of handcrafted footwear produced in Pakistan. They are traditionally made by artisans mostly using tanned leather. The uppers are made of one piece of leather or textile embroidered and embellished with brass nails, cowry shells, mirrors, bells and ceramic beads. Even the bonding from the upper to the sole is done by cotton thread that is not only eco-friendly but also enmeshes the leather fibers with great strength. Some product range also uses bright and ornate threads.
-                    <br>
-                    As it evolved through the centuries and is being produced by individual artisans, products vary in designs and colours. It encapsules cultural diversity, local ethos and ethnicity.
-                    </p>
-                </div>
+                
                 <h4>Using DLS:</h4>
                 <img src="data/DLS1.jpg" alt="results" width="390" height="400">
                 <img src="data/DLS2.jpg" alt="results" width="390" height="400">
                 <img src="data/DLS3.jpg" alt="results" width="390" height="600">
-                <div class="container">
-                    <p>Sindhi Mojari (or simply Mojari) is a type of handcrafted footwear produced in Pakistan. They are traditionally made by artisans mostly using tanned leather. The uppers are made of one piece of leather or textile embroidered and embellished with brass nails, cowry shells, mirrors, bells and ceramic beads. Even the bonding from the upper to the sole is done by cotton thread that is not only eco-friendly but also enmeshes the leather fibers with great strength. Some product range also uses bright and ornate threads.
-                    <br>
-                    As it evolved through the centuries and is being produced by individual artisans, products vary in designs and colours. It encapsules cultural diversity, local ethos and ethnicity.
-                    </p>
-                </div>
+                
                 <h4>Using IDDFS:</h4>
                 <img src="data/ID1.jpg" alt="results" width="390" height="400">
                 <img src="data/ID2.jpg" alt="results" width="390" height="400">
                 <img src="data/ID3.jpg" alt="results" width="390" height="600">
                 <div class="container">
-                    <p>Sindhi Mojari (or simply Mojari) is a type of handcrafted footwear produced in Pakistan. They are traditionally made by artisans mostly using tanned leather. The uppers are made of one piece of leather or textile embroidered and embellished with brass nails, cowry shells, mirrors, bells and ceramic beads. Even the bonding from the upper to the sole is done by cotton thread that is not only eco-friendly but also enmeshes the leather fibers with great strength. Some product range also uses bright and ornate threads.
-                    <br>
-                    As it evolved through the centuries and is being produced by individual artisans, products vary in designs and colours. It encapsules cultural diversity, local ethos and ethnicity.
-                    </p>
                     <div class="source">
                         <a href="src/dfs.zip">Source Code Zip (Only Search)</a>
                     </div>
@@ -160,13 +191,17 @@
                 <hr>
                 <video controls autoplay loop muted src="data/exercise5.mp4" alt="A pair of sneakers" width="390" height="300"></video>
                 <div class="container">
+                    <h4>Challenge: Rectangle List and Dragging Obstacles</h4>
                     <p>
-                    Sneakers (also called trainers, athletic shoes, tennis shoes, gym shoes, kicks, sport shoes, flats, running shoes, or runners) are shoes primarily designed for sports or other forms of physical exercise, but which are now also widely used for everyday casual wear.
-                    <br>
-                    Since their popularization by companies such as Converse, Nike and Spalding in the mid 20th century, they have become attire, with variety growing in many global markets exponentially. Like other parts of the global clothing industry, manufacture of shoes is heavily concentrated in Asia with nine in ten shoes produced in that region.
-                    <br>
-                    Contemporary sneakers are largely made from synthetic materials, and the materials and manufacturing process produce, on average, about 14 kg (31 lb) of CO2 emissions. Some companies are trying to substitute more sustainable materials in their manufacture. About 90% of shoes end up in landfills at end of life.
-                </p>
+                        The guidelines for this challenge were to add support for a list of rectangles and let the user click and drag them. <br>
+                        The first was achieved easily using an ArrayList and replacing most of the instances of passing a single recangle object through
+                        with that list. <br>
+                        The second was achieved by using the mouseDragged() function. It checks that the user clicks inside a box and saves the current mouse position if they had. <br>
+                        Then, when the draw function is called, it checks to see if the mouse is being dragged. If it is, it reads the current mouse position, gets the vector from 
+                        last to current, and moves the box's top left by that much. <br>
+                        The current implementation only reconnects neighbors once the box is moved, however, I was not sure if it should redo the entire PRM algorithm, 
+                        so I put that in as well, just commented out.
+                    </p>
                     <div class="source">
                         <a href="src/prm.zip">Source Code Zip (Only Planning)</a>
                     </div>
@@ -183,9 +218,30 @@
                 <hr>
                 <video controls autoplay loop muted src="data/kiwers.mp4" alt="kiwis everywhere" width="600" height="325"></video>
                 <div class="container">
-                    <p>Zori, also rendered as zōri, are thonged Japanese sandals made of rice straw, cloth, lacquered wood, leather, rubber, or—most commonly and informally—synthetic materials. They are a slip-on descendant of the tied-on waraji sandal.
-                    <br>
-                    Similar in form, modern flip-flops became popular in the United States, Australia and New Zealand when soldiers returning from World War II brought Japanese zori with them.</p>
+                    <h4>Challenge: The Entire Thing</h4>
+                    <p>
+                        This little extra project took aspects from the first three exercises and combined them into like a weeks worth of work. <br>
+                        I definitely spent way too much time on this and its not even as good as I want it to be, but I had to stop at some point. <br>
+                        This is my first foray into creating 3D animations so it was really fun to learn my way through the processing documentation! <br>
+                        At the fundamental level, it is very similar to the TTC exercise. Each kiwi is it's own agent with velocity, acceleration, and position. <br>
+                        The forces being applied on the kiwis are attraction to other kiwis, separation from their friends, separation from the moais in the corners (non-infected), <br>
+                        repulsion from the fences, alignment, and attraction to the moais (infected). <br>
+                        Additionally, non-infected kiwis are much more repulsed by infected kiwis and clicking the mouse either attracts (left) or repels (right) the kiwis from current camera position. <br>
+                        Each timestep, there is a 0.05% chance for a kiwi to get infected. Once they do, they run to the closest moai and get cleansed. <br>
+                        I think this leads to a cool little simulation of kiwis running around. The wall forces improve on the ones present in the TTC simulation by adding a strong 
+                        separation force from the walls. <br>
+                        In addition to the forces, this applies concepts from the particle systems exercise, as well as the mouse follow exercise. <br>
+                        Representing the particle systems, each moai has a cone of white particles coming out of it that disappear over the roughly second that 
+                        they are around, giving the affect of mist. (kind of) <br>
+                        Additionally, each kiwi rotates towards its velocity as it is walking. I improved on the previous rotation by applying a technique that Professor Guy told
+                        me about in which the angle is changed with this equation: <br> agentDir[id] = agentDir[id]*t+(1-t)*atan2(agentVel[id].x, agentVel[id].z); <br>
+                        The equation takes the previous direction and changes it only slightly based on the t value that makes it look okay. The t value is also somewhat based on
+                        the current velocity of the kiwi, however, I did not perfect this. <br>
+                        Despite this, the kiwis are still quite prone to spinning, but, honestly, I think its kinda cute so I'm leaving it. <br>
+                        Last two things about this one is that is has a camera that can snap onto kiwis locations and follow them (c) and also cancel that (shift+c) <br>
+                        and I remade the Vec2 library into a Vec3 library with a couple more functions :) <br>
+                        It was a fun project and I can't wait for the next ones!
+                    </p>
                     <div class="source">
                         <a href="src/kiwers.zip">Source Code Zip (Only Kiwi)</a>
                     </div>
@@ -203,7 +259,7 @@
                     <p>
                         <b>Website:</b> <br>
                         All credit goes to Lauren Oliver for layout and colors. <br>
-                        I just added the text and vides :) <br>
+                        I just added the text and videos :) and made the kiwis come to life ofc<br>
                         <br>
                         <b>Exercise #1:</b> <br>
                         Cat Picture: My friend Rish's cat, Kali (not Eric!!) <br>
@@ -216,7 +272,8 @@
                         Credit to Professor Guy for like 90% of the code
                         <br><br>
                         <b>Kiwi Prison</b> <br>
-                        Kiwi Model: Lauren Oliver <br>
+                        Kiwi Model and Posing: Lauren Oliver <br>
+                        Credit to Professor Guy for the better way to rotate and 95% of the camera code <br>
                         Moai Model:<a href="https://sketchfab.com/3d-models/low-poly-moai-a6613687895d4eb0a778242083ebb824">sketchfab</a> <br>
                         Fence Model:<a href="https://www.turbosquid.com/3d-models/3d-metal-fence-1393026">turbosquid</a> <br>
                         Conkcrete Texture:<a href="https://img.freepik.com/free-photo/blank-concrete-white-wall-texture-background_1017-15560.jpg?w=2000">freepik</a> <br>
