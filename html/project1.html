@@ -217,19 +217,38 @@
                 <div class="container">
                     <h4>Overview</h4>
                     <p>
-                        
+                        User interaction with a simulation is important to feel more like a participant rather than an observer. <br>
+                        In our simulation, the user can control the goal spaceship with keys. The movement is smooth and with respect to the camera. <br>
+                        In the case that the goal moves inside an obstacle, the kiwi will stop his booster and spin in circles, like a lost puppy. <br>
+                        The underlying system of this could be expanded to obstacles relatively easy, but it was not done before the deadline. 
                     </p>
                     <br>
 
-                    <h4>Features</h4>
+                    <h4>Keybinds</h4>
                     <p>
-                        
+                        i/I: Move ship in direction camera is facing <br>
+                        k/K: Move ship in opposite direction camera is facing <br>
+                        j/J: Move ship to the left of the camera <br>
+                        l/L: Move ship to the right of the camera <br>
+                        <i>Keys can be combined to go diagonally</i>
                     </p>
                     <br>
 
                     <h4>Challenges</h4>
                     <p>
-
+                        This was easily the most challenging portion of the assignment, and purely because so many ideas just didn't work. <br>
+                        The first idea I had was to use the mouse to select obstacles to then move them around with keys, however, I could not figure out how to cast a ray like that in processing. <br>
+                        To solve that problem I thought maybe snapping the camera to a top down view would map the x/y of the screen to the x/z of the scene, however, aspects of the camera prevented that as well. <br>
+                        The idea that I settled on was allowing the user to move around the goal spaceship with the arrow keys. <br>
+                        While this is a very limited form of user interaction, that is only because I implemented it very last minute. <br>
+                        The underlying system that it utilizes can very easily be expanded into moving any obstacle if I only had a little bit more time. Maybe a future addition. <br>
+                        Pretty much the only challenge I faced with this idea was getting the spaceship to move in a way that made sense and was comprehensible. <br>
+                        Initially, using i,j,k,l would move the spaceship in predetermined directions not at all with respect to the camera. <br>
+                        This proved to be...well...incredibly confusing, especially with a movable camera, so I inspected the camera class and found it had a forwardDir and rightDir variable in it. <br>
+                        I moved those out to global, got leftDir and backDir, and made it so the arrow keys would move the ship with respect to the direction of the camera. <br>
+                        This solution makes the movement of it very nice and smooth and clean, but to get there it was a bit of a challenge. <br>
+                        <br>
+                        If I come back to this part ever, I think I would really like to figure out how to move obstacles with the mouse.
                     </p>
                     <br>
                 </div>
