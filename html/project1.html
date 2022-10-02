@@ -86,9 +86,9 @@
                         A couple challenges were encountered in the process of getting PRM.pde to work: <br>
                         > Getting the weights to transfer through the path was tough until creation of the Node class. <br>
                         > The actual searching isn't as optimal as it could be. There are a decent amount of new calls in it but
-                            everytime I tried to have a different idea, it ended up being too much changing to make it worth it. <br>
+                            everytime we tried to have a different idea, it ended up being too much changing to make it worth it. <br>
                         > The biggest challenge was finding a good way to optimally connect the start and goal nodes. <br> 
-                        In the end, I just added them as nodes on the graph and connected their neighbors.
+                        In the end, we just added them as nodes on the graph and connected their neighbors.
                     </p>
                     <div class="source">
                         <a href="../src/project1/PRM.pde">Source Code Zip (Only PRM.pde)</a>
@@ -189,7 +189,7 @@
                         Taking into consideration obstacles that were above the hitbox of the kiwi and making sure the ray casting was casting properly took up some time. <br>
                         Additionally, figuring out what to do when there was no path took a bit of weighing what would be quick vs what would be good looking. <br>
                         One other challenge is that occasionally, if the turn to get to the goal is too sharp, the kiwi will get stuck circling it. <br>
-                        This can be remedied by moving the goal, I just did not have the time to fix it. <br>
+                        This can be remedied by moving the goal, we just did not have the time to fix it. <br>
                         Outside of those however, this portion was relatively challenge free. 
                     </p>
                     <br>
@@ -219,8 +219,8 @@
 
                     <h4>Challenges</h4>
                     <p>
-                        Not too many challenges came with this portion. I (Noah) had some experience from HW1 with orientation smoothing so I basically just used that code. <br>
-                        The only thing I could call a challenge is that if you are moving the goal spaceship while the kiwi is moving towards it, he will occasionally spin fully around. <br>
+                        Not too many challenges came with this portion. I (Noah) had some experience from HW1 with orientation smoothing so we basically just used that code. <br>
+                        The only thing we could call a challenge is that if you are moving the goal spaceship while the kiwi is moving towards it, he will occasionally spin fully around. <br>
                         I had this issue in HW1 as well with them randomly making a full spin and I'll use the same excuse here as to why its left in: its cute :p
                     </p>
                     <br>
@@ -259,15 +259,15 @@
                     <h4>Challenges</h4>
                     <p>
                         This was easily the most challenging portion of the assignment, and purely because so many ideas just didn't work. <br>
-                        The first idea I had was to use the mouse to select obstacles to then move them around with keys, however, I could not figure out how to cast a ray like that in processing. <br>
-                        To solve that problem I thought maybe snapping the camera to a top down view would map the x/y of the screen to the x/z of the scene, however, aspects of the camera prevented that as well. <br>
-                        The idea that I settled on was allowing the user to move around the goal spaceship with the arrow keys. <br>
-                        While this is a very limited form of user interaction, that is only because I implemented it very last minute. <br>
-                        The underlying system that it utilizes can very easily be expanded into moving any obstacle if I only had a little bit more time. Maybe a future addition. <br>
-                        Pretty much the only challenge I faced with this idea was getting the spaceship to move in a way that made sense and was comprehensible. <br>
+                        The first idea we had was to use the mouse to select obstacles to then move them around with keys, however, we could not figure out how to cast a ray like that in processing. <br>
+                        To solve that problem we thought maybe snapping the camera to a top down view would map the x/y of the screen to the x/z of the scene, however, aspects of the camera prevented that as well. <br>
+                        The idea that we settled on was allowing the user to move around the goal spaceship with the arrow keys. <br>
+                        While this is a very limited form of user interaction, that is only because we implemented it very last minute. <br>
+                        The underlying system that it utilizes can very easily be expanded into moving any obstacle if we only had a little bit more time. Maybe a future addition. <br>
+                        Pretty much the only challenge we faced with this idea was getting the spaceship to move in a way that made sense and was comprehensible. <br>
                         Initially, using i,j,k,l would move the spaceship in predetermined directions not at all with respect to the camera. <br>
-                        This proved to be...well...incredibly confusing, especially with a movable camera, so I inspected the camera class and found it had a forwardDir and rightDir variable in it. <br>
-                        I moved those out to global, got leftDir and backDir, and made it so the arrow keys would move the ship with respect to the direction of the camera. <br>
+                        This proved to be...well...incredibly confusing, especially with a movable camera, so we inspected the camera class and found it had a forwardDir and rightDir variable in it. <br>
+                        we moved those out to global, got leftDir and backDir, and made it so the arrow keys would move the ship with respect to the direction of the camera. <br>
                         This solution makes the movement of it very nice and smooth and clean, but to get there it was a bit of a challenge. <br>
                         <br>
                         If I come back to this part ever, I think I would really like to figure out how to move obstacles with the mouse.
@@ -334,7 +334,7 @@
                     <p>
                         Rocket powered kiwi of the future. <br>
                         For the particle system, the kiwi will spit particles out from behind him in a cone, mimicking a rocket booster. <br>
-                        They are diamond shaped because I thought that looked pretty good compared to more detailed spheres. <br>
+                        They are diamond shaped because we thought that looked pretty good compared to more detailed spheres. <br>
                         The particles start out a solid yellow color and over their lifetime turn red then brown and fade out. <br>
                         The direction of the particles also changes as the velocity changes and the trail will get longer if he is going faster. <br>
                         When the kiwi is coming down or going up the spaceship beams, his booster will not be activated. <br>
@@ -421,25 +421,23 @@
                 <div class="container">
                     <h4>Overview</h4>
                     <p> 
-                         
-                    </p>
-                    <br>
-
-                    <h4>Forces</h4>
-                    <p>
-                        
+                        Using the TTC forces between agents itself, and obstacles, agents head to the destination, and avoid other objects on the way. <br>
+                        We integrated this by using the TTC-force assignment.<br>
+                        At each frame, the agents calculate ttc between the agent and other objects and reflect the force to change the direction. 
                     </p>
                     <br>
 
                     <h4>Keybinds</h4>
                     <p>
-                        
+                        space: toggle pause
                     </p>
                     <br>
 
                     <h4>Challenges</h4>
                     <p>
-                        
+                        The issue here was the collision and movement were not smooth as the number of agents increases. When multiple agents 
+                        are jammed into one place, it is hard to orient the agents. This could result in smooth movements when obstacles have certain distance 
+                        enough for agents to pass between the obstacles.
                     </p>
                     <div class="source">
                         <a href="../src/project1/">Source Code Zip (Only Crowd Sim)</a>
@@ -463,7 +461,7 @@
                         
                         <b>Part #1: PRM</b> <br>
                         Credit to professor Guy for the starting code <br>
-                        Credit to whatever website I looked at last year for my implementation of A* <br>
+                        Credit to whatever website I looked at last year for our implementation of A* <br>
 
                         <br>
 
@@ -473,7 +471,13 @@
                         Spaceship:<a href="https://www.cgtrader.com/free-3d-models/space/spaceship/free-flying-saucer">Free Flying Saucer</a> <br>
                         Cylinder:<a href="https://vormplus.be/full-articles/drawing-a-cylinder-with-processing">Drawing a Cylinder with Processing</a> <br>
                         Planet Textures:<a href="http://planetpixelemporium.com/planets.html">Planet Pixel Emporium</a> <br>
-                        Black Hole Image:<a href="https://wallpaperaccess.com/full/476721.jpg">Some Wallpaper Site</a>
+                        Black Hole Image:<a href="https://wallpaperaccess.com/full/476721.jpg">Some Wallpaper Site</a> <br>
+                         
+                        <br>
+
+                        <b>Part #3: Crowd Simulation</b> <br>
+                        Boilerplate code from TTC exercise <br>
+
                     </p>
                     <br>
                 </div>
