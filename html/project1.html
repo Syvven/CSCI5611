@@ -41,23 +41,42 @@
                 <div class="container">
                     <h4>Path Planning</h4>
                     <p> 
-                        PRM.pde plans paths using a Probabilistic Roadmap. 
+                        PRM.pde plans paths using a Probabilistic Roadmap. <br>
+                        Random nodes are generated on the map, connected, and searched in order to find a path from start to goal. <br>
+                        The start and goal nodes can be moved around using right and left click and the path changes when doing so. <br>
+                        Each obstacle has a radius that represents the original obstacle's radius plus the agent's hitbox radius. <br>
+                        An obstacle on the map can be moved around and the nodes will be connected and unconnected appropriately.  
                     </p>
 
                     <h4>A* Implementation</h4>
                     <p>
                         Our search algorithm of choice was the A* algorithm. <br>
-                        A* produces the optimal path at times faster than UCS does by utilizing a 
-                        heuristic--in this case the heuristic being the absolute distance from the current node to the goal. <br>
+                        A* produces the optimal path at times faster than UCS does by utilizing a heuristic. <br>
+                        In this case the heuristic is the absolute distance from the current node to the goal--obviously admissible. <br>
                         A* consistently got us optimal paths in an average of 100-200us with 200 tests. <br>
                         This implementation of A* utilizes Java's built in PriorityQueue class along with a homemade Node class. <br>
                         The priority queues are useful to keep track of the current shortest path and the Node class is useful for keeping 
-                        track of the current path cost. <br>
+                            track of the current path cost. <br>
+                        Additionally, I (Noah) already knew vaguely how to implement A* so it was a safe bet for algorithm choice. 
+                            In the future I might come back and make one with RRT. (if i get the time :p)
+                    </p>
+
+                    <h4>Keybinds</h4>
+                    <p>
+                        Mouse Left Click: Move Goal Position <br>
+                        Mouse Right Click: Move Start Position <br>
+                        Up,Left,Right,Down: Move Circle Obstacle <br>
+                        Shift: Circle Obstacle Moves Faster
                     </p>
 
                     <h4>Challenges</h4>
                     <p>
-                        A couple challenges were encountered in the process of getting PRM.pde to work. 
+                        A couple challenges were encountered in the process of getting PRM.pde to work: <br>
+                        > Getting the weights to transfer through the path was tough until creation of the Node class. <br>
+                        > The actual searching isn't as optimal as it could be. There are a decent amount of new calls in it but
+                            everytime I tried to have a different idea, it ended up being too much changing to make it worth it. <br>
+                        > The biggest challenge was finding a good way to optimally connect the start and goal nodes. <br> 
+                        In the end, I just added them as nodes on the graph and connected their neighbors.
                     </p>
                     <div class="source">
                         <a href="../src/project1/PRM.pde">Source Code Zip (Only PRM.pde)</a>
@@ -67,6 +86,7 @@
             <pe id="particleSystems1"></pe>
         </article>
     </section>
+    <script src="../scripts/script.js"></script>
 </body>
 
 <footer>
