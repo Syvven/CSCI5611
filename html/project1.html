@@ -166,7 +166,10 @@
 
                     <h4>Challenges</h4>
                     <p>
-
+                        One of the biggest challenges of this portion was integrating the 2d path planning with the 3d environment. <br>
+                        Taking into consideration obstacles that were above the hitbox of the kiwi and making sure the ray casting was casting properly took up some time. <br>
+                        Additionally, figuring out what to do when there was no path took a bit of weighing what would be quick vs what would be good looking. <br>
+                        Outside of those however, this portion was relatively challenge free. 
                     </p>
                     <br>
                 </div>
@@ -183,19 +186,20 @@
                 <div class="container">
                     <h4>Overview</h4>
                     <p>
-                        
-                    </p>
-                    <br>
-
-                    <h4>Features</h4>
-                    <p>
-                        
+                        Orientation of the agent is important in having a simulation that looks good, and, lucky for us, the kiwi has a very obvious forward. <br>
+                        We integrated that by having the direction his beak faces be aligned with the direction his velocity faces. <br>
+                        The kiwi has a rotation variable that is incremented and decremented depending on the rotation between his current angle and angle to his velocity. <br>
+                        At each timestep, his model is rotated around the Y-axis as much as the rotation variable currently is. <br>
+                        This gives the look of smooth turning to his model, and, when combined with the velocity smoothing and path smoothing, makes the movement much more realistic. <br>
+                        <i>To make his model more or less floaty when turning, there is a t value in the code that can be increased or decreased to make him more or less floaty.</i>
                     </p>
                     <br>
 
                     <h4>Challenges</h4>
                     <p>
-
+                        Not too many challenges came with this portion. I (Noah) had some experience from HW1 with orientation smoothing so I basically just used that code. <br>
+                        The only thing I could call a challenge is that if you are moving the goal spaceship while the kiwi is moving towards it, he will occasionally spin fully around. <br>
+                        I had this issue in HW1 as well with them randomly making a full spin and I'll use the same excuse here as to why its left in: its cute :p
                     </p>
                     <br>
                 </div>
