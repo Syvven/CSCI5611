@@ -23,7 +23,12 @@
         <ul id="nav">
             <li><a href="../index.html">Home</a></li>
             <li><a href="#prm1">Part 1: PRM</a></li>
-            <li><a href="#kiwispace1">Part 2: Navigation Simulation</a></li>
+            <li><a href="#kiwispace1">Part 2: Nav Sim</a></li>
+            <li><a href="#single">Agent Nav</a></li>
+            <li><a href="#orient">Orientation</a></li>
+            <li><a href="#user">Interaction</a></li>
+            <li><a href="#render">Models/Textures</a></li>
+            <li><a href="#camera">Camera/Lights</a></li>
             <li><a href="#credits">Credits</a></li>
             <li><a href="https://github.com/Syvven/CSCI5611/tree/main/src/project1">Github Repo</a></li>
             
@@ -137,6 +142,7 @@
                     </div>
                 </div>
             </div>
+            <pe id="single"></pe>
         </article>
 
         <article>
@@ -150,6 +156,7 @@
                     <h4>Overview</h4>
                     <p>
                         This portion of the project utilizes the PRM and A* created in Part 1. <br>
+                        In the underlying PRM code, the kiwi is represented as a dot and the obstacles represented as circles with a radius equal to their initial radius plus the kiwi hitbox radius. <br>
                         A few optimizations were made in order to make movement more smooth and consistent: <br>
                         1. At every timestep along the path, the agent casts a ray to see if it can make it to the next node already. If so, it changes to going to that node. <br>
                         2. The agent does not snap its velocity to the next node, rather, slowly changes to get closer to it. <br>
@@ -160,7 +167,15 @@
                         1. The ray casting and changing nodes makes the path look smoother and also makes it more optimal, even though it is technically more work. <br>
                         2. This makes the turning look smoother. <br>
                         3. It is no fun to see the kiwi not do anything if there is no path, so regenerating nodes and eventually resetting seemed like a good and fairly fast option. <br>
-                        4. The kiwi spinning is cute and funny.<i>More info on the goal moving can be found<a href="#user">here</a></i>
+                        4. The kiwi spinning is cute and funny.<i>More info on the goal moving can be found<a href="#user">here</a></i> <br>
+
+                        Additionally, the speed of the agent can be incrased by holding backspace. <br>
+                    </p>
+                    <br>
+
+                    <h4>Keybinds</h4>
+                    <p>
+                        hold backspace: increase speed of agent <br>
                     </p>
                     <br>
 
@@ -174,6 +189,7 @@
                     <br>
                 </div>
             </div>
+            <pe id="orient"></pe>
         </article>
 
         <article>
@@ -253,6 +269,7 @@
                     <br>
                 </div>
             </div>
+            <pe id="render"></pe>
         </article>
 
         <article>
@@ -265,28 +282,42 @@
                 <div class="container">
                     <h4>Overview</h4>
                     <p>
-                        
-                    </p>
-                    <br>
+                        Rendering with 3D models and textures is an important aspect to a simulation looking realistic. <br>
+                        Starting with the scene as a whole: <br>
+                        1. The scene is rendered in 3D with an x, y, and z axis using processing's P3D setting. <br>
+                        2. The scene is bounded by a sphere with a black hole texture applied to it. <br>
+                        <br>
 
-                    <h4>Features</h4>
-                    <p>
-                        
+                        As for the navigation space: <br>
+                        1. Obstacles are rendered as spheres with random planet textures applied to them. <br>
+                        2. The planets are rotating at random rates and random tilts. <br>
+                        3. The agent of the scene is rendered as a brown kiwi with a clear orientation. <br>
+                        4. Two rotating alien spaceships mark the start and goal of the path. <br>
+                        5. A red and green cylinder act as beams for the spaceships that the kiwi goes down and up. <br>
+                        <br>
+
+                        These additions are useful to make the scene look more realistic and give it a bit of flair. <br>
                     </p>
                     <br>
 
                     <h4>Challenges</h4>
                     <p>
-
+                        At one point during the addition of these 3d models, processing would start throwing errors and being slow. <br>
+                        I could not figure out the solution to it and just assumed there were too many models, but it turns out I was forgetting to clear a few ArrayLists! <br>
+                        Additionally, the skybox was quite hard to figure out. <br>
+                        Initially, I was going to go with a cubic skybox, but trying to figure out which png went where and cropping the skybox image so it lined up right was a tough task. <br>
+                        I then tried a circle skybox to better results. After a couple images, I realized I probably wasn't going to be able to make it super high quality, <br>
+                            so I just left it being a bit blurry. It impacts the realism a bit but I think it looks pretty cool :)<i>I will take any suggestions though</i>
                     </p>
                     <br>
                 </div>
             </div>
+            <pe id="camera"></pe>
         </article>
 
         <article>
             <div class="card">
-                <h3 id="rendering">Rendering: Camera and Lights</h3>
+                <h3 id="camera1">Rendering: Camera and Lights</h3>
                 <hr>
                 <video controls autoplay loop muted src="../data/project1/" alt="demonstartion of PRM.pde" width="600" height="450"></video>
                 <br>
@@ -294,19 +325,45 @@
                 <div class="container">
                     <h4>Overview</h4>
                     <p>
-                        
+                        Camera usage is important to change viewing angles and lights are important to actually see things. <br>
+                        We implemented both a camera system and lights in our simulation. <br>
+                        Starting with the camera: <br>
+                        1. Camera movement can be controlled using the keybinds below. <br>
+                        2. First person and 3rd person views of the agent are available using the keybinds below. <br>
+                        3. Most of the camera code is provided by Professor Guy, however, modifications were made. <br>
+                        <br>
+                        Lighting:<br>
+                        1. There is a slight ambient light over the whole scene. <br>
+                        2. There is a directional light to simulate light radiating from corona of the black hole. <br>
+                        3. The kiwi has a point light that follows above him to light him up and also make him entering the spaceships look cool. <br>
+                        <br>
+
+                        The lights serve to make the scene a bit more realistic and also keep the kiwi in view. 
                     </p>
                     <br>
 
-                    <h4>Features</h4>
+                    <h4>Keybinds</h4>
                     <p>
-                        
+                        r: Reset obstacles and start/goal <br>
+                        R: reset camera position to initial <br>
+                        p: Toggle pausing the scene <br>
+                        w/a/s/d: move the position of the camera  <br>
+                        q/e: move vertically pos/neg   <br>
+                        hold shift: increase speed of movement  <br>
+                        up/down/left/right: change viewing angle of camera  <br>
+                        Hold v: Follow agent from behind (w to move up, s to move down) <br>
+                        f: toggle first person view <br>
                     </p>
                     <br>
 
                     <h4>Challenges</h4>
                     <p>
-
+                        There were a few challenges in this respect. <br>
+                        Getting the positioning of the camera right for first person and 3rd person was a bit of a tough task. <br>
+                        Additionally, getting the lighting working at first was a little interesting because I had to learn how processing actually does lighting. <br>
+                        Initially, the kiwi was going to be walking on a floor with a spotlight above him following him and casting a circular light at his feet. <br>
+                        I spent a lot of time on this not working until I realized it wasn't working because the floor was one big cube rather than many small ones. <br>
+                        Unfortunately, all that work was scrapped for a definitely cooler scene. 
                     </p>
                     <br>
                 </div>
