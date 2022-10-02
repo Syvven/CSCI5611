@@ -48,9 +48,7 @@ p{
 a{
     color:rgb(116, 62, 62);
 }
-a:hover .dropdown-content {
-    display: block;
-}
+
 img{
     border-radius:5px;
 }
@@ -61,11 +59,12 @@ img{
 
 ul{
     list-style-type: none;
+    width: 100%;
     margin:0;
     padding:0;
     /* overflow:hidden; */
     background-color: rgb(116, 62, 62);
-    /* border-radius: 5px; */
+    border-radius: 5px;
     z-index: 999999;
 }
 
