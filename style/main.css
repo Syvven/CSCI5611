@@ -15,6 +15,8 @@ body{
 
 /*aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
 
+
+
 h1{
     font-size: 58px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -46,10 +48,12 @@ p{
 a{
     color:rgb(116, 62, 62);
 }
+a:hover .dropdown-content {
+    display: block;
+}
 img{
     border-radius:5px;
 }
-
 
 /*aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
 
@@ -57,9 +61,10 @@ ul{
     list-style-type: none;
     margin:0;
     padding:0;
-    overflow:hidden;
+    /* overflow:hidden; */
     background-color: rgb(116, 62, 62);
-    border-radius: 5px;
+    /* border-radius: 5px; */
+    z-index: 999999;
 }
 
 .sticky {

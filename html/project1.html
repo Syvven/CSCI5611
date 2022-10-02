@@ -23,6 +23,8 @@
         <ul id="nav">
             <li><a href="../index.html">Home</a></li>
             <li><a href="#prm1">Part 1: PRM</a></li>
+            <li><a href="#kiwispace1">Part 2: Navigation Simulation</a></li>
+            <li><a href="#credits">Credits</a></li>
             <li><a href="https://github.com/Syvven/CSCI5611/tree/main/src/project1">Github Repo</a></li>
             
         </ul>
@@ -47,6 +49,7 @@
                         Each obstacle has a radius that represents the original obstacle's radius plus the agent's hitbox radius. <br>
                         An obstacle on the map can be moved around and the nodes will be connected and unconnected appropriately.  
                     </p>
+                    <br>
 
                     <h4>A* Implementation</h4>
                     <p>
@@ -60,6 +63,7 @@
                         Additionally, I (Noah) already knew vaguely how to implement A* so it was a safe bet for algorithm choice. 
                             In the future I might come back and make one with RRT. (if i get the time :p)
                     </p>
+                    <br>
 
                     <h4>Keybinds</h4>
                     <p>
@@ -68,6 +72,7 @@
                         Up,Left,Right,Down: Move Circle Obstacle <br>
                         Shift: Circle Obstacle Moves Faster
                     </p>
+                    <br>
 
                     <h4>Challenges</h4>
                     <p>
@@ -83,7 +88,236 @@
                     </div>
                 </div>
             </div>
-            <pe id="particleSystems1"></pe>
+            <pe id="kiwispace1"></pe>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="kiwispace">Part 2: Navigation Simulation</h3>
+                <hr>
+                <image src="../data/project1/kiwiVoid.png" alt="kiwi staring into the void and the void staring back" width="50%" height="50%"></video>
+                <h4>“Eyes as black and as shiny as chips of obsidian stared back into his. They were eyes like black holes, letting nothing out, not even information.” - Neil Gaiman</h4>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        Part 2 consists of a single agent navigation simulation. <br>
+                        In the simulation, a Kiwi makes his way through a field of planets from his start spaceship to his goal spaceship. <br>
+                        The simulation utilizes the PRM and A* from Part 1 in order to create and find a path. <br>
+                        In addition, it adds some optimizations to solve the issue of no paths existing and makes the scenario a bit more interesting. <br>
+                        More detailed information on individual parts can be found in the following sections.
+                    </p>
+                    <br>
+
+                    <h4>Features</h4>
+                    <p>
+                        Single Agent Navigation <br> 
+                        3D Rendering, Camera, Lighting <br>
+                        Agent Rendered with a Model  <br>
+                        Start and Goal Rendered with a Model  <br>
+                        Particle System  <br>
+                        Agent Orientation Smoothing <br>
+                        Realtime User Interaction (kind of) <br>
+                        <i>Each feature has its own section below.</i>
+                    </p>
+                    <br>
+
+                    <h4>Tools Utilized</h4>
+                    <p>
+                        - Camera code from Professor Guy (modified) <br>
+                        - Base PRM code that was provided (modified) <br>
+                        - Java's built in ArrayList and PriorityQueue <br>
+                        - Code on how to draw a Cylinder (somewhat modified) <br>
+                        <i>A more detailed credits list is at the bottom of the page (accessible through navigation bar)</i>
+                    </p>
+
+                    <div class="source">
+                        <a href="../src/project1/project1-crowds.zip">Source Code Zip (All Files)</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="singleagent">Single Agent Navigation</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/" alt="demonstartion of PRM.pde" width="600" height="450"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        This portion of the project utilizes the PRM and A* created in Part 1. <br>
+                        A few optimizations were made in order to make movement more smooth and consistent: <br>
+                        1. At every timestep along the path, the agent casts a ray to see if it can make it to the next node already. If so, it changes to going to that node. <br>
+                        2. If there is no path, the agent will regenerate nodes and try to find a path again. If this happens 3 times, the scene is reset. <br>
+                        3. In the event of the goal node posthumosly moving into an inaccessible location, the agent will do a funny little spin until it is able to be reached again.
+                    </p>
+                    <br>
+
+                    <h4>Features</h4>
+                    <p>
+                        
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+
+                    </p>
+                    <br>
+                </div>
+            </div>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="rendering">Orientation Smoothing</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/" alt="demonstartion of PRM.pde" width="600" height="450"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        
+                    </p>
+                    <br>
+
+                    <h4>Features</h4>
+                    <p>
+                        
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+
+                    </p>
+                    <br>
+                </div>
+            </div>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="rendering">User Interaction</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/" alt="demonstartion of single agent navigating through the scene" width="600" height="450"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        
+                    </p>
+                    <br>
+
+                    <h4>Features</h4>
+                    <p>
+                        
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+
+                    </p>
+                    <br>
+                </div>
+            </div>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="rendering">Rendering: 3D, Models, Textures</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/" alt="demonstartion of PRM.pde" width="600" height="450"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        
+                    </p>
+                    <br>
+
+                    <h4>Features</h4>
+                    <p>
+                        
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+
+                    </p>
+                    <br>
+                </div>
+            </div>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="rendering">Rendering: Camera and Lights</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/" alt="demonstartion of PRM.pde" width="600" height="450"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        
+                    </p>
+                    <br>
+
+                    <h4>Features</h4>
+                    <p>
+                        
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+
+                    </p>
+                    <br>
+                </div>
+            </div>
+        </article>
+
+        <!-- Credits -->
+        <article>
+            <div class="card">
+                <h3 id="credits">Credits and Sources</h3>
+                <hr>
+                <div class="container">
+                    <p>
+                        <b>Website:</b> <br>
+                        All credit goes to Lauren Oliver for layout and colors. <br>
+                        (except the sticky header, that was Noah :p) <br>
+
+                        <br>
+                        
+                        <b>Part #1: PRM</b> <br>
+                        Credit to professor Guy for the starting code <br>
+                        Credit to whatever website I looked at last year for my implementation of A* <br>
+
+                        <br>
+
+                        <b>Part #2: Navigation Simulation</b> <br>
+                        Camera Code: Professor Guy (modified) <br>
+                        Kiwi: Lauren Oliver <br>
+                        Spaceship:<a href="https://www.cgtrader.com/free-3d-models/space/spaceship/free-flying-saucer">Free Flying Saucer</a> <br>
+                        Cylinder:<a href="https://vormplus.be/full-articles/drawing-a-cylinder-with-processing">Drawing a Cylinder with Processing</a> <br>
+                        Planet Textures:<a href="http://planetpixelemporium.com/planets.html">Planet Pixel Emporium</a> <br>
+                        Black Hole Image:<a href="https://wallpaperaccess.com/full/476721.jpg">Some Wallpaper Site</a>
+                    </p>
+                    <br>
+                </div>
+            </div>
         </article>
     </section>
     <script src="../scripts/script.js"></script>
