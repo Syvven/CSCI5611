@@ -14,7 +14,7 @@
 
 <header>
     <h1 id="#top">CSCI 5611: Project 1</h1>
-    <h12 id="#top2">Noah Hendrickson (hend0800) and (cheon051)</h12>
+    <h12 id="#top2">Noah Hendrickson (hend0800) and Chanyoung Cheong (cheon051)</h12>
 </header>
 
 <!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
@@ -39,9 +39,25 @@
                 <video controls autoplay loop muted src="../data/project1/part1PRM.mp4" alt="demonstartion of PRM.pde" width="600" height="450"></video>
             
                 <div class="container">
-                    <h4>Path Planning Utilizing A*</h4>
+                    <h4>Path Planning</h4>
                     <p> 
-                        
+                        PRM.pde plans paths using a Probabilistic Roadmap. 
+                    </p>
+
+                    <h4>A* Implementation</h4>
+                    <p>
+                        Our search algorithm of choice was the A* algorithm. <br>
+                        A* produces the optimal path at times faster than UCS does by utilizing a 
+                        heuristic--in this case the heuristic being the absolute distance from the current node to the goal. <br>
+                        A* consistently got us optimal paths in an average of 100-200us with 200 tests. <br>
+                        This implementation of A* utilizes Java's built in PriorityQueue class along with a homemade Node class. <br>
+                        The priority queues are useful to keep track of the current shortest path and the Node class is useful for keeping 
+                        track of the current path cost. <br>
+                    </p>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        A couple challenges were encountered in the process of getting PRM.pde to work. 
                     </p>
                     <div class="source">
                         <a href="../src/project1/PRM.pde">Source Code Zip (Only PRM.pde)</a>
