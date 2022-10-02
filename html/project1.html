@@ -149,7 +149,8 @@
             <div class="card">
                 <h3 id="singleagent">Single Agent Navigation</h3>
                 <hr>
-                <video controls autoplay loop muted src="../data/project1/" alt="demonstartion of PRM.pde" width="600" height="450"></video>
+                <video controls autoplay loop muted src="../data/project1/3dnav.mp4" alt="demonstartion of navigation" width="37.5%" height="50%"></video>
+                <video controls autoplay loop muted src="../data/project1/2dnav.mp4" alt="demonstartion of navigation" width="37.5%" height="50%"></video>
                 <br>
 
                 <div class="container">
@@ -169,13 +170,14 @@
                         3. It is no fun to see the kiwi not do anything if there is no path, so regenerating nodes and eventually resetting seemed like a good and fairly fast option. <br>
                         4. The kiwi spinning is cute and funny.<i>More info on the goal moving can be found<a href="#user">here</a></i> <br>
 
-                        Additionally, the speed of the agent can be incrased by holding backspace. <br>
+                        Additionally, the speed of the agent can be incrased by holding backspace and there is a 2d view mode. <br>
                     </p>
                     <br>
 
                     <h4>Keybinds</h4>
                     <p>
                         hold backspace: increase speed of agent <br>
+                        c: switch to 2d/3d view mode
                     </p>
                     <br>
 
@@ -184,6 +186,8 @@
                         One of the biggest challenges of this portion was integrating the 2d path planning with the 3d environment. <br>
                         Taking into consideration obstacles that were above the hitbox of the kiwi and making sure the ray casting was casting properly took up some time. <br>
                         Additionally, figuring out what to do when there was no path took a bit of weighing what would be quick vs what would be good looking. <br>
+                        One other challenge is that occasionally, if the turn to get to the goal is too sharp, the kiwi will get stuck circling it. <br>
+                        This can be remedied by moving the goal, I just did not have the time to fix it. <br>
                         Outside of those however, this portion was relatively challenge free. 
                     </p>
                     <br>
@@ -196,7 +200,7 @@
             <div class="card">
                 <h3 id="rendering">Orientation Smoothing</h3>
                 <hr>
-                <video controls autoplay loop muted src="../data/project1/" alt="demonstartion of PRM.pde" width="600" height="450"></video>
+                <video controls autoplay loop muted src="../data/project1/orientation.mp4" alt="demonstartion of PRM.pde" width="50%" height="50%"></video>
                 <br>
 
                 <div class="container">
@@ -312,6 +316,38 @@
                     <br>
                 </div>
             </div>
+            <pe id="particles"></pe>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="parts">Particle System</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/particles.mp4" alt="demonstartion of PRM.pde" width="50%" height="50%"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        Rocket powered kiwi of the future. <br>
+                        For the particle system, the kiwi will spit particles out from behind him in a cone, mimicking a rocket booster. <br>
+                        They are diamond shaped because I thought that looked pretty good compared to more detailed spheres. <br>
+                        The particles start out a solid yellow color and over their lifetime turn red then brown and fade out. <br>
+                        The direction of the particles also changes as the velocity changes and the trail will get longer if he is going faster. <br>
+                        When the kiwi is coming down or going up the spaceship beams, his booster will not be activated. <br>
+                        Additionally, if the goal ship has been moved into an unreachable position, his booster will stop. <br>
+                        I think this does a really good job of looking like he's boosting through space and its silly :) <br>
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        Not too many challenges here. I (Noah) already had experience with this from HW1 as well so, again, just kinda copied code. <br>
+                        Hardest part was getting a decent looking gradient. 
+                    </p>
+                    <br>
+                </div>
+            </div>
             <pe id="camera"></pe>
         </article>
 
@@ -348,7 +384,7 @@
                         R: reset camera position to initial <br>
                         p: Toggle pausing the scene <br>
                         w/a/s/d: move the position of the camera  <br>
-                        q/e: move vertically pos/neg   <br>
+                        space/control: move vertically pos/neg   <br>
                         hold shift: increase speed of movement  <br>
                         up/down/left/right: change viewing angle of camera  <br>
                         Hold v: Follow agent from behind (w to move up, s to move down) <br>
