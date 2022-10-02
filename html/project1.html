@@ -45,7 +45,7 @@
                 <h3 id="prm">Part 1: PRM</h3>
                 <!-- <h4>Exercise #1</h4>  -->
                 <hr>
-                <video controls autoplay loop muted src="../data/project1/part1PRM.mp4" alt="demonstartion of PRM.pde" width="600" height="450"></video>
+                <video controls autoplay loop muted src="../data/project1/part1PRM.mp4" alt="demonstartion of PRM.pde" width="50%" height="50%"></video>
             
                 <div class="container">
                     <h4>Path Planning</h4>
@@ -417,28 +417,31 @@
                 <h3 id="part33">Part 3: Crowd Sim</h3>
                 <!-- <h4>Exercise #1</h4>  -->
                 <hr>
-                <video controls autoplay loop muted src="../data/project1/" alt="demonstartion of crowd simulation" width="50%" height="50%"></video>
+                <video controls autoplay loop muted src="../data/project1/crowd.mp4" alt="demonstartion of crowd simulation" width="37.5%" height="50%"></video>
+                <video controls autoplay loop muted src="../data/project1/crowdobst.mp4" alt="demonstartion of crowd simulation" width="37.5%" height="50%"></video>
             
                 <div class="container">
                     <h4>Overview</h4>
                     <p> 
-                        Using the TTC forces between agents itself, and obstacles, agents head to the destination, and avoid other objects on the way. <br>
+                        Using the TTC forces between agents itself, and obstacles, as well as seperation forces, agents head to the destination, and avoid other objects on the way. <br>
                         We integrated this by using the TTC-force assignment.<br>
-                        At each frame, the agents calculate ttc between the agent and other objects and reflect the force to change the direction. 
+                        At each frame, the agents calculate ttc and seperation force between the agent and other objects and reflect the force to change the direction. 
                     </p>
                     <br>
 
                     <h4>Keybinds</h4>
                     <p>
-                        space: toggle pause
+                        space: toggle pause <br>
+                        r: reset scene 
                     </p>
                     <br>
 
                     <h4>Challenges</h4>
                     <p>
-                        The issue here was the collision and movement were not smooth as the number of agents increases. When multiple agents 
-                        are jammed into one place, it is hard to orient the agents. This could result in smooth movements when obstacles have certain distance 
-                        enough for agents to pass between the obstacles.
+                        The issue here was the collision and movement were not smooth as the number of agents increases. <br>
+                        When multiple agents are jammed into one place, it is hard to orient the agents. <br>
+                        This could result in smooth movements when obstacles have certain distance enough for agents to pass between the obstacles. <br>
+                        A possible future fix for this could be to integrate path planning and add forces towards the agents goal node in the path.
                     </p>
                     <div class="source">
                         <a href="../src/project1/">Source Code Zip (Only Crowd Sim)</a>
