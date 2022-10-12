@@ -237,7 +237,7 @@ function update(dt) {
     //     }
     // } 
 
-    var temp;
+    // var temp;
     for (let i = 0; i < vertNodes; i++) {
         for (let j = 0; j < horizNodes; j++) {
             if (i != 0) {
