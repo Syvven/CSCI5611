@@ -392,6 +392,10 @@ function animate() {
 
 window.addEventListener( 'resize', onWindowResize, false );
 window.addEventListener('keyup', onKeyUp, false);
+window.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    paused = !paused;
+})
 
 function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
