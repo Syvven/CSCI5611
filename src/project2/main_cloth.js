@@ -3,11 +3,17 @@ import Stats from '../node_modules/stats.js/src/Stats.js';
 import {GLTFLoader} from './GLTFLoader.js';
 import {FlyControls} from './FlyControls.js';
 import {OrbitControls} from './OrbitControls.js';
+import {DragControls} from './DragControls.js';
 import WebGL from './webGLCheck.js';
+import { QuadraticBezierCurve } from '../node_modules/three/src/Three.js';
 
 // scene globals
 var scene, renderer, loader;
 var flyControls, orbitControls, camera;
+var raycaster, dragControls;
+var kiwi, mixer;
+var kiwiBod, kiwiHead, kiwiGroup;
+var modelReady = false;
 
 // other render globals
 var prevTime;
@@ -15,17 +21,10 @@ var prevTime;
 // rope globals
 var floorY, radius, stringTop, mass, k, kv, kfric;
 var restLen;
-var dampFricU, forceU, gravity;
-var nodePos, nodeVel, nodeAcc, maxNodes, vertNodes, horizNodes;
-var objArr;
-var totalDT;
-
-// key handler booleans
-var paused = true;
-
-var stats;
-
-setup();
+var dampFricU, gravity;
+var nodePos, nodeVel, nodeAcc, vertNodes, horizNodes;
+var objArr, controlArr;
+var totalDT, stats;
 
 function setup() {
     ///////////////////////// RENDERING INFO ////////////////////////////////////////////////////////
@@ -36,6 +35,7 @@ function setup() {
     document.body.appendChild(stats.dom);
 
     scene = new THREE.Scene();
+    scene.add(new THREE.AxesHelper(1000));
 
     // creates renderer and sets its size
     renderer = new THREE.WebGLRenderer({depth:true});
@@ -58,16 +58,7 @@ function setup() {
     orbitControls.zoomSpeed = 2;
 
 
-    // // other setup items go here
-
-    // // kiwi loading, only do after cloth is done
-    // loader = new GLTFLoader();
-
-    // loader.load('../models/kiwi.glb', function(gltf) {
-    //     scene.add(gltf.scene);
-    // }, undefined, function(error) {
-    //     console.error(error);
-    // });
+    // other setup items go here
 
     // adds texture for the ground
     var groundTexture = new THREE.TextureLoader().load("../models/floor-min.png");
@@ -76,7 +67,7 @@ function setup() {
     groundTexture.encoding = THREE.sRGBEncoding;
     var groundMaterial = new THREE.MeshStandardMaterial({map:groundTexture, side: THREE.DoubleSide});
     var mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(400,400, 10, 10),groundMaterial);
-    mesh.position.y = 0.0;
+    mesh.position.y = -0.1;
     mesh.rotation.x = -Math.PI/2;
     scene.add(mesh);
 
@@ -95,6 +86,8 @@ function setup() {
     // light.position.set(0, 50, 50);
     // scene.add(light);
 
+    raycaster = new THREE.Raycaster();
+
     // date for dt purposes
     prevTime = new Date();
 
@@ -102,11 +95,10 @@ function setup() {
 
     floorY = 0.0; radius = 5.0;
     mass = 0.1; k = 10000; kv = 1000; kfric = 4000;
-    vertNodes = 20; horizNodes = 20;
+    vertNodes = 15; horizNodes = 15;
     gravity = new THREE.Vector3(0.0, -10, 0.0);
     stringTop = new THREE.Vector3(0.0, 50.0, 0.0);
-    restLen = 2;
-    objArr = [];
+    restLen = 3;
 
     nodePos = Array(vertNodes).fill(null).map(() => Array(horizNodes));
     nodeVel = Array(vertNodes).fill(null).map(() => Array(horizNodes));
@@ -130,54 +122,58 @@ function setup() {
     for (let i = 0; i < vertNodes-1; i++) {
         for (let j = 0; j < horizNodes-1; j++) {
             var geo = new THREE.BufferGeometry();
-
             var positions = new Float32Array(18);
             var colors = new Float32Array(18);
+
+            var pos = nodePos[i][j];
             // tleft vert
-            positions[0] = nodePos[i][j].x;
-            positions[1] = nodePos[i][j].y;
-            positions[2] = nodePos[i][j].z;
-            colors[0] = Math.random();
-            colors[1] = Math.random();
-            colors[2] = Math.random();
+            positions[0] = pos.x;
+            positions[1] = pos.y;
+            positions[2] = pos.z;
+            colors[0] = ((pos.y*10)%256)/256;
+            colors[1] = ((pos.y*20)%256)/256;
+            colors[2] = ((pos.y*30)%256)/256;
 
+             // bRight vert
+            positions[15] = pos.x;
+            positions[16] = pos.y;
+            positions[17] = pos.z;
+            colors[15] = ((pos.y*10)%256)/256;
+            colors[16] = ((pos.y*20)%256)/256;
+            colors[17] = ((pos.y*30)%256)/256;
+
+            pos = nodePos[i][j+1];
             // tRight vert
-            positions[3] = nodePos[i][j+1].x;
-            positions[4] = nodePos[i][j+1].y;
-            positions[5] = nodePos[i][j+1].z;
-            colors[3] = Math.random();
-            colors[4] = Math.random();
-            colors[5] = Math.random();
+            positions[3] = pos.x;
+            positions[4] = pos.y;
+            positions[5] = pos.z;
+            colors[3] = ((pos.y*10)%256)/256;
+            colors[4] = ((pos.y*20)%256)/256;
+            colors[5] = ((pos.y*30)%256)/256;
 
-            positions[6] = nodePos[i+1][j+1].x;
-            positions[7] = nodePos[i+1][j+1].y;
-            positions[8] = nodePos[i+1][j+1].z;
-            colors[6] = Math.random();
-            colors[7] = Math.random();
-            colors[8] = Math.random();
+            pos = nodePos[i+1][j+1];
+            positions[6] = pos.x;
+            positions[7] = pos.y;
+            positions[8] = pos.z;
+            colors[6] = ((pos.y*10)%256)/256;
+            colors[7] = ((pos.y*20)%256)/256;
+            colors[8] = ((pos.y*30)%256)/256;
 
             // bLeft vert
-            positions[9] = nodePos[i+1][j+1].x;
-            positions[10] = nodePos[i+1][j+1].y;
-            positions[11] = nodePos[i+1][j+1].z;
-            colors[9] = Math.random();
-            colors[10] = Math.random();
-            colors[11] = Math.random();
+            positions[9] = pos.x;
+            positions[10] = pos.y;
+            positions[11] = pos.z;
+            colors[9] = ((pos.y*10)%256)/256;
+            colors[10] = ((pos.y*20)%256)/256;
+            colors[11] = ((pos.y*30)%256)/256;
             
-            positions[12] = nodePos[i+1][j].x;
-            positions[13] = nodePos[i+1][j].y;
-            positions[14] = nodePos[i+1][j].z;
-            colors[12] = Math.random();
-            colors[13] = Math.random();
-            colors[14] = Math.random();
-
-            // bRight vert
-            positions[15] = nodePos[i][j].x;
-            positions[16] = nodePos[i][j].y;
-            positions[17] = nodePos[i][j].z;
-            colors[15] = Math.random();
-            colors[16] = Math.random();
-            colors[17] = Math.random();
+            pos = nodePos[i+1][j];
+            positions[12] = pos.x;
+            positions[13] = pos.y;
+            positions[14] = pos.z;
+            colors[12] = ((pos.y*10)%256)/256;
+            colors[13] = ((pos.y*20)%256)/256;
+            colors[14] = ((pos.y*30)%256)/256;
 
             geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
             geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
@@ -200,16 +196,82 @@ function setup() {
     }
 
     dampFricU = new THREE.Vector3(0,0,0);
-    forceU = new THREE.Vector3(0,0,0);
+    // controlArr = Array(1);
+    // controlArr[0] = scene.children[scene.children.length];
 
-    // after this point, animate() is run
-    if ( WebGL.isWebGLAvailable() ) {
-        // Initiate function or other initializations here
-        animate();
-    } else {
-        const warning = WebGL.getWebGLErrorMessage();
-        document.getElementById( 'container' ).appendChild( warning );
-    }
+    controlArr = [];
+    dragControls = new DragControls(controlArr, camera, renderer.domElement);
+    dragControls.addEventListener('dragstart', (e) => {
+        orbitControls.enabled = false;
+    });
+    dragControls.addEventListener('dragend', (e) => {
+        orbitControls.enabled = true;
+    });
+
+    // kiwi loading, only do after cloth is done
+    loader = new GLTFLoader();
+
+    loader.load('../models/kiwi.glb', function(gltf) {
+        kiwi = gltf.scene;
+        kiwi.scale.set(5,5,5);
+        kiwi.position.y = 7.5;
+        kiwiGroup = kiwi;
+        kiwi.traverse((o) => {
+            if (o.isMesh) {
+                o.castShadow = true;
+                o.receiveShadow = true;
+                o.frustumCulled = false;
+                o.geometry.computeVertexNormals();
+            }
+        });
+
+        mixer = new THREE.AnimationMixer(kiwi);
+        mixer.clipAction(gltf.animations[0]).play();
+
+        kiwiBod = new THREE.Mesh(
+            new THREE.SphereBufferGeometry(
+                6,
+                32,
+                16
+            ),
+            new THREE.MeshBasicMaterial(
+                {
+                    transparent: true,
+                    opacity: 0
+                }
+            )
+        );
+        kiwiBod.position.set(10,10,10);
+        kiwiHead = new THREE.Mesh(
+            new THREE.SphereBufferGeometry(
+                3.5,
+                32,
+                16
+            ),
+            new THREE.MeshBasicMaterial(
+                {
+                    transparent: true,
+                    opacity: 0
+                }
+            )
+        )
+        kiwiHead.position.set(
+            kiwiBod.position.x+headXOff,
+            kiwiBod.position.y+headYOff,
+            kiwiBod.position.z+headZOff
+        );
+
+        scene.add(kiwi);
+
+        scene.add(kiwiBod);
+        scene.add(kiwiHead);
+        controlArr.push(kiwiBod);
+
+        modelReady = true;
+        // after this point, animate() is run
+    }, undefined, function(error) {
+        console.error(error);
+    });
 }
 
 function update(dt) {
@@ -295,6 +357,16 @@ function update(dt) {
                 nodeVel[i][j] = v1.clone();
                 nodePos[i][j].add(nodeVel[i][j]);
 
+                // check for collisions here
+                if (nodePos[i][j].y < 0) {
+                    nodePos[i][j].y = 0;
+                    nodeVel[i][j].y = 0;
+                    var temp = nodeVel[i][j].clone();
+                    temp.multiplyScalar(100);
+                    temp.multiplyScalar(dt);
+                    nodeVel[i][j].add(temp);
+                }
+
                 // // eulerian integration
                 // nodeAcc[i][j].multiplyScalar(dt)
                 // nodeVel[i][j].add(nodeAcc[i][j]);
@@ -309,72 +381,77 @@ function update(dt) {
 function updatePosAndColor() {
     for (let i = 0; i < vertNodes-1; i++) {
         for (let j = 0; j < horizNodes-1; j++) {
-            var pos = objArr[i][j].geometry.attributes.position.array;
+            var positions = objArr[i][j].geometry.attributes.position.array;
             var colors = objArr[i][j].geometry.attributes.color.array;
-            pos[0] = nodePos[i][j].x;
-            pos[1] = nodePos[i][j].y;
-            pos[2] = nodePos[i][j].z;
-            colors[0] = Math.random();
-            colors[1] = Math.random();
-            colors[2] = Math.random();
 
-            // tRight vert
-            pos[3] = nodePos[i][j+1].x;
-            pos[4] = nodePos[i][j+1].y;
-            pos[5] = nodePos[i][j+1].z;
-            colors[3] = Math.random();
-            colors[4] = Math.random();
-            colors[5] = Math.random();
-
-            pos[6] = nodePos[i+1][j+1].x;
-            pos[7] = nodePos[i+1][j+1].y;
-            pos[8] = nodePos[i+1][j+1].z;
-            colors[6] = Math.random();
-            colors[7] = Math.random();
-            colors[8] = Math.random();
-
-            // bLeft vert
-            pos[9] = nodePos[i+1][j+1].x;
-            pos[10] = nodePos[i+1][j+1].y;
-            pos[11] = nodePos[i+1][j+1].z;
-            colors[9] = Math.random();
-            colors[10] = Math.random();
-            colors[11] = Math.random();
-            
-            pos[12] = nodePos[i+1][j].x;
-            pos[13] = nodePos[i+1][j].y;
-            pos[14] = nodePos[i+1][j].z;
-            colors[12] = Math.random();
-            colors[13] = Math.random();
-            colors[14] = Math.random();
+            var pos = nodePos[i][j];
+            var a = ((pos.y*10)%256)/256;
+            var b = ((pos.y*20)%256)/256;
+            var c = ((pos.z*30)%256)/256;
+            // tleft vert
+            positions[0] = pos.x;
+            positions[1] = pos.y;
+            positions[2] = pos.z;
+            colors[0] = a;
+            colors[1] = b;
+            colors[2] = c;
 
             // bRight vert
-            pos[15] = nodePos[i][j].x;
-            pos[16] = nodePos[i][j].y;
-            pos[17] = nodePos[i][j].z;
-            colors[15] = Math.random();
-            colors[16] = Math.random();
-            colors[17] = Math.random();
+            positions[15] = pos.x;
+            positions[16] = pos.y;
+            positions[17] = pos.z;
+            colors[15] = a;
+            colors[16] = b;
+            colors[17] = c;
+
+            pos = nodePos[i][j+1];
+            // tRight vert
+            positions[3] = pos.x;
+            positions[4] = pos.y;
+            positions[5] = pos.z;
+            colors[3] = ((pos.y*10)%256)/256;
+            colors[4] = ((pos.y*20)%256)/256;
+            colors[5] = ((pos.z*30)%256)/256;
+
+            pos = nodePos[i+1][j+1];
+            a = ((pos.y*10)%256)/256;
+            b = ((pos.y*20)%256)/256;
+            c = ((pos.z*30)%256)/256;
+            positions[6] = pos.x;
+            positions[7] = pos.y;
+            positions[8] = pos.z;
+            colors[6] = a;
+            colors[7] = b;
+            colors[8] = c;
+
+            // bLeft vert
+            positions[9] = pos.x;
+            positions[10] = pos.y;
+            positions[11] = pos.z;
+            colors[9] = a;
+            colors[10] = b;
+            colors[11] = c;
+            
+            pos = nodePos[i+1][j];
+            positions[12] = pos.x;
+            positions[13] = pos.y;
+            positions[14] = pos.z;
+            colors[12] = ((pos.y*10)%256)/256;
+            colors[13] = ((pos.y*20)%256)/256;
+            colors[14] = ((pos.z*30)%256)/256;
         }
     }
 }
 
+var bodXOff = 0; var bodYOff = -2; var bodZOff = 3;
+var headXOff = 0; var headYOff = 6; var headZOff = 5;
+
 function animate() {
-    stats.begin()
     requestAnimationFrame( animate );
 
     var now = new Date();
     var dt = (now - prevTime) / 1000;
     prevTime = now;
-    
-    if (!paused) {
-        for (let i = 0; i < 100; i++) {
-            totalDT += 1;
-            update(1/100);
-        }
-        updatePosAndColor();
-    }
-    orbitControls.update(1*dt);
 
     for (let i = 0; i < vertNodes-1; i++) {
         for (let j = 0; j < horizNodes-1; j++) {
@@ -385,23 +462,61 @@ function animate() {
         }
     }
 
+    if (modelReady) {
+        // kiwiGroup.position.copy(kiwiBod.position);
+        kiwiGroup.position.set(
+            kiwiBod.position.x+bodXOff, 
+            kiwiBod.position.y+bodYOff, 
+            kiwiBod.position.z+bodZOff
+        );
+        kiwiHead.position.set(
+            kiwiBod.position.x+headXOff,
+            kiwiBod.position.y+headYOff,
+            kiwiBod.position.z+headZOff
+        );
+    }
+    // checkKeyPressed();
+    totalDT += 1;
+    if (!paused) {
+        mixer.update(dt);
+        for (let i = 0; i < 100; i++) {
+            update(1/100);
+        }
+        updatePosAndColor();
+    }
+    orbitControls.update(1*dt);
+
     // adds line and renders scene
 	renderer.render( scene, camera );
-    stats.end()
+    stats.update();
 }
 
+// key handler booleans
+var paused = true;
 window.addEventListener( 'resize', onWindowResize, false );
 window.addEventListener('keyup', onKeyUp, false);
+window.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    orbitControls.enabled = false;
+})
+window.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    orbitControls.enabled = true;
+});
 window.addEventListener('touchend', (e) => {
     e.preventDefault();
-    paused = !paused;
-})
+    if (!orbitControls.enabled) {
+        paused = !paused;
+        orbitControls.endabled = true;
+    }
+});
 
 function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.render(scene, camera);
 }
 
 function reset() {
@@ -416,6 +531,7 @@ function reset() {
             nodeAcc[i][j] = new THREE.Vector3(0.0,0.0,0.0);
         }
     }
+    updatePosAndColor();
 }
 
 function onKeyUp(event) {
@@ -426,5 +542,14 @@ function onKeyUp(event) {
     if (event.code == 'KeyR') {
         reset();
     }
+}
+
+setup();
+if ( WebGL.isWebGLAvailable() ) {
+    // Initiate function or other initializations here
+    animate();
+} else {
+    const warning = WebGL.getWebGLErrorMessage();
+    document.getElementById( 'container' ).appendChild( warning );
 }
 
