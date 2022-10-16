@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../style/main.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funnies in Space</title>
+</head>
+
+<!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
+
+<!-- Kiwi Image Src: https://www.pngitem.com/middle/JhJiRw_kiwi-bird-png-transparent-image-kiwi-bird-png/ -->
+
+<header>
+    <h1 id="#top">CSCI 5611: Project 1</h1>
+    <h12 id="#top2">Noah Hendrickson (hend0800) and Chanyoung Cheong (cheon051)</h12>
+</header>
+
+<!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
+<ul id="nav">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="#prm1">Part 1</a></li>
+    <li><a href="#kiwispace1">Part 2</a></li>
+    <li><a href="#single">Agent Nav</a></li>
+    <li><a href="#orient">Orient</a></li>
+    <li><a href="#user">Interact</a></li>
+    <li><a href="#render">Models/Textures</a></li>
+    <li><a href="#particles">Particles</a></li>
+    <li><a href="#camera">Camera/Lights</a></li>
+    <li><a href="#part3">Part 3</a></li>
+    <li><a href="#credits">Credits</a></li>
+    <li><a href="https://github.com/Syvven/CSCI5611/tree/main/src/project1">Github Repo</a></li>
+</ul>
+
+<body id="bod">
+    <section>
+        <pe id="prm1"></pe>
+    
+        <hr> &nbsp;
+        
+        <!-- InClass Exercies #1 -->
+        <article>
+            <div class="card">
+                <h3 id="prm">Part 1: PRM</h3>
+                <!-- <h4>Exercise #1</h4>  -->
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/part1PRM.mp4" alt="demonstartion of PRM.pde" width="50%" height="50%"></video>
+            
+                <div class="container">
+                    <h4>Path Planning</h4>
+                    <p> 
+                        PRM.pde plans paths using a Probabilistic Roadmap. <br>
+                        Random nodes are generated on the map, connected, and searched in order to find a path from start to goal. <br>
+                        The start and goal nodes can be moved around using right and left click and the path changes when doing so. <br>
+                        Each obstacle has a radius that represents the original obstacle's radius plus the agent's hitbox radius. <br>
+                        An obstacle on the map can be moved around and the nodes will be connected and unconnected appropriately.  
+                    </p>
+                    <br>
+
+                    <h4>A* Implementation</h4>
+                    <p>
+                        Our search algorithm of choice was the A* algorithm. <br>
+                        A* produces the optimal path at times faster than UCS does by utilizing a heuristic. <br>
+                        In this case the heuristic is the absolute distance from the current node to the goal--obviously admissible. <br>
+                        A* consistently got us optimal paths in an average of 100-200us with 200 tests. <br>
+                        This implementation of A* utilizes Java's built in PriorityQueue class along with a homemade Node class. <br>
+                        The priority queues are useful to keep track of the current shortest path and the Node class is useful for keeping 
+                            track of the current path cost. <br>
+                        Additionally, I (Noah) already knew vaguely how to implement A* so it was a safe bet for algorithm choice. 
+                            In the future I might come back and make one with RRT. (if i get the time :p)
+                    </p>
+                    <br>
+
+                    <h4>Keybinds</h4>
+                    <p>
+                        Mouse Left Click: Move Goal Position <br>
+                        Mouse Right Click: Move Start Position <br>
+                        Up,Left,Right,Down: Move Circle Obstacle <br>
+                        Shift: Circle Obstacle Moves Faster
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        A couple challenges were encountered in the process of getting PRM.pde to work: <br>
+                        > Getting the weights to transfer through the path was tough until creation of the Node class. <br>
+                        > The actual searching isn't as optimal as it could be. There are a decent amount of new calls in it but
+                            everytime we tried to have a different idea, it ended up being too much changing to make it worth it. <br>
+                        > The biggest challenge was finding a good way to optimally connect the start and goal nodes. <br> 
+                        In the end, we just added them as nodes on the graph and connected their neighbors.
+                    </p>
+                    <div class="source">
+                        <a href="../src/project1/PRM.pde">Source Code Zip (Only PRM.pde)</a>
+                    </div>
+                </div>
+            </div>
+            <pe id="kiwispace1"></pe>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="kiwispace">Part 2: Navigation Simulation</h3>
+                <hr>
+                <h4>Art Contest Submission (Quote Included?):</h4>
+                <image src="../data/project1/kiwiVoid.png" alt="kiwi staring into the void and the void staring back" width="50%" height="50%"></image>
+                <h4>“Eyes as black and as shiny as chips of obsidian stared back into his. They were eyes like black holes, letting nothing out, not even information.” - Neil Gaiman</h4>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        Part 2 consists of a single agent navigation simulation. <br>
+                        In the simulation, a Kiwi makes his way through a field of planets from his start spaceship to his goal spaceship. <br>
+                        The simulation utilizes the PRM and A* from Part 1 in order to create and find a path. <br>
+                        In addition, it adds some optimizations to solve the issue of no paths existing and makes the scenario a bit more interesting. <br>
+                        More detailed information on individual parts can be found in the following sections.
+                    </p>
+                    <br>
+
+                    <h4>Features</h4>
+                    <p>
+                        Single Agent Navigation <br> 
+                        3D Rendering, Camera, Lighting <br>
+                        Agent Rendered with a Model  <br>
+                        Start and Goal Rendered with a Model  <br>
+                        Particle System  <br>
+                        Agent Orientation Smoothing <br>
+                        Realtime User Interaction (kind of) <br>
+                        <i>Each feature has its own section below.</i>
+                    </p>
+                    <br>
+
+                    <h4>Tools Utilized</h4>
+                    <p>
+                        - Camera code from Professor Guy (modified) <br>
+                        - Base PRM code that was provided (modified) <br>
+                        - Java's built in ArrayList and PriorityQueue <br>
+                        - Code on how to draw a Cylinder (somewhat modified) <br>
+                        <i>A more detailed credits list is at the bottom of the page (accessible through navigation bar)</i>
+                    </p>
+
+                    <div class="source">
+                        <a href="../src/project1/project1-nav.zip">Source Code Zip (All Part 2 Files)</a>
+                    </div>
+                </div>
+            </div>
+            <pe id="single"></pe>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="singleagent">Single Agent Navigation</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/3dnav.mp4" alt="demonstartion of navigation" width="37.5%" height="50%"></video>
+                <video controls autoplay loop muted src="../data/project1/2dnav.mp4" alt="demonstartion of navigation" width="37.5%" height="50%"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        This portion of the project utilizes the PRM and A* created in Part 1. <br>
+                        In the underlying PRM code, the kiwi is represented as a dot and the obstacles represented as circles with a radius equal to their initial radius plus the kiwi hitbox radius. <br>
+                        A few optimizations were made in order to make movement more smooth and consistent: <br>
+                        1. At every timestep along the path, the agent casts a ray to see if it can make it to the next node already. If so, it changes to going to that node. <br>
+                        2. The agent does not snap its velocity to the next node, rather, slowly changes to get closer to it. <br>
+                        3. If there is no path, the agent will regenerate nodes and try to find a path again. If this happens 3 times, the scene is reset. <br>
+                        4. In the event of the goal node posthumosly moving into an inaccessible location, the agent will do a funny little spin until it is able to be reached again. <br>
+                        <br>
+                        We decided to do this because of multiple reasons: <br>
+                        1. The ray casting and changing nodes makes the path look smoother and also makes it more optimal, even though it is technically more work. <br>
+                        2. This makes the turning look smoother. <br>
+                        3. It is no fun to see the kiwi not do anything if there is no path, so regenerating nodes and eventually resetting seemed like a good and fairly fast option. <br>
+                        4. The kiwi spinning is cute and funny.<i>More info on the goal moving can be found<a href="#user">here</a></i> <br>
+
+                        Additionally, the speed of the agent can be incrased by holding backspace and there is a 2d view mode. <br>
+                    </p>
+                    <br>
+
+                    <h4>Keybinds</h4>
+                    <p>
+                        hold backspace: increase speed of agent <br>
+                        c: switch to 2d/3d view mode
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        One of the biggest challenges of this portion was integrating the 2d path planning with the 3d environment. <br>
+                        Taking into consideration obstacles that were above the hitbox of the kiwi and making sure the ray casting was casting properly took up some time. <br>
+                        Additionally, figuring out what to do when there was no path took a bit of weighing what would be quick vs what would be good looking. <br>
+                        One other challenge is that occasionally, if the turn to get to the goal is too sharp, the kiwi will get stuck circling it. <br>
+                        This can be remedied by moving the goal, we just did not have the time to fix it. <br>
+                        Outside of those however, this portion was relatively challenge free. 
+                    </p>
+                    <br>
+                </div>
+            </div>
+            <pe id="orient"></pe>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="rendering">Orientation Smoothing</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/orientation.mp4" alt="demonstartion of PRM.pde" width="50%" height="50%"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        Orientation of the agent is important in having a simulation that looks good, and, lucky for us, the kiwi has a very obvious forward. <br>
+                        We integrated that by having the direction his beak faces be aligned with the direction his velocity faces. <br>
+                        The kiwi has a rotation variable that is incremented and decremented depending on the rotation between his current angle and angle to his velocity. <br>
+                        At each timestep, his model is rotated around the Y-axis as much as the rotation variable currently is. <br>
+                        This gives the look of smooth turning to his model, and, when combined with the velocity smoothing and path smoothing, makes the movement much more realistic. <br>
+                        <i>To make his model more or less floaty when turning, there is a t value in the code that can be increased or decreased to make him more or less floaty.</i>
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        Not too many challenges came with this portion. I (Noah) had some experience from HW1 with orientation smoothing so we basically just used that code. <br>
+                        The only thing we could call a challenge is that if you are moving the goal spaceship while the kiwi is moving towards it, he will occasionally spin fully around. <br>
+                        I had this issue in HW1 as well with them randomly making a full spin and I'll use the same excuse here as to why its left in: its cute :p
+                    </p>
+                    <br>
+                </div>
+            </div>
+            <p1 id="user"></p1>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="rendering">User Interaction</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/userinteract.mp4" alt="interaction" width="50%" height="50%"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        User interaction with a simulation is important to feel more like a participant rather than an observer. <br>
+                        In our simulation, the user can control the goal spaceship with keys. The movement is smooth and with respect to the camera. <br>
+                        In the case that the goal moves inside an obstacle, the kiwi will stop his booster and spin in circles, like a lost puppy. <br>
+                        The underlying system of this could be expanded to obstacles relatively easy, but it was not done before the deadline. 
+                    </p>
+                    <br>
+
+                    <h4>Keybinds</h4>
+                    <p>
+                        i/I: Move ship in direction camera is facing <br>
+                        k/K: Move ship in opposite direction camera is facing <br>
+                        j/J: Move ship to the left of the camera <br>
+                        l/L: Move ship to the right of the camera <br>
+                        <i>Keys can be combined to go diagonally</i>
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        This was easily the most challenging portion of the assignment, and purely because so many ideas just didn't work. <br>
+                        The first idea we had was to use the mouse to select obstacles to then move them around with keys, however, we could not figure out how to cast a ray like that in processing. <br>
+                        To solve that problem we thought maybe snapping the camera to a top down view would map the x/y of the screen to the x/z of the scene, however, aspects of the camera prevented that as well. <br>
+                        The idea that we settled on was allowing the user to move around the goal spaceship with the arrow keys. <br>
+                        While this is a very limited form of user interaction, that is only because we implemented it very last minute. <br>
+                        The underlying system that it utilizes can very easily be expanded into moving any obstacle if we only had a little bit more time. Maybe a future addition. <br>
+                        Pretty much the only challenge we faced with this idea was getting the spaceship to move in a way that made sense and was comprehensible. <br>
+                        Initially, using i,j,k,l would move the spaceship in predetermined directions not at all with respect to the camera. <br>
+                        This proved to be...well...incredibly confusing, especially with a movable camera, so we inspected the camera class and found it had a forwardDir and rightDir variable in it. <br>
+                        we moved those out to global, got leftDir and backDir, and made it so the arrow keys would move the ship with respect to the direction of the camera. <br>
+                        This solution makes the movement of it very nice and smooth and clean, but to get there it was a bit of a challenge. <br>
+                        <br>
+                        If I come back to this part ever, I think I would really like to figure out how to move obstacles with the mouse.
+                    </p>
+                    <br>
+                </div>
+            </div>
+            <pe id="render"></pe>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="rendering">Rendering: 3D, Models, Textures</h3>
+                <hr>
+                <image src="../data/project1/render1.jpg" alt="models" width="37.5%" height="50%"></image>
+                <image src="../data/project1/render2.jpg" alt="models" width="37.5%" height="50%"></image>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        Rendering with 3D models and textures is an important aspect to a simulation looking realistic. <br>
+                        Starting with the scene as a whole: <br>
+                        1. The scene is rendered in 3D with an x, y, and z axis using processing's P3D setting. <br>
+                        2. The scene is bounded by a sphere with a black hole texture applied to it. <br>
+                        <br>
+
+                        As for the navigation space: <br>
+                        1. Obstacles are rendered as spheres with random planet textures applied to them. <br>
+                        2. The planets are rotating at random rates and random tilts. <br>
+                        3. The agent of the scene is rendered as a brown kiwi with a clear orientation. <br>
+                        4. Two rotating alien spaceships mark the start and goal of the path. <br>
+                        5. A red and green cylinder act as beams for the spaceships that the kiwi goes down and up. <br>
+                        <br>
+
+                        These additions are useful to make the scene look more realistic and give it a bit of flair. <br>
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        At one point during the addition of these 3d models, processing would start throwing errors and being slow. <br>
+                        I could not figure out the solution to it and just assumed there were too many models, but it turns out I was forgetting to clear a few ArrayLists! <br>
+                        Additionally, the skybox was quite hard to figure out. <br>
+                        Initially, I was going to go with a cubic skybox, but trying to figure out which png went where and cropping the skybox image so it lined up right was a tough task. <br>
+                        I then tried a circle skybox to better results. After a couple images, I realized I probably wasn't going to be able to make it super high quality, <br>
+                            so I just left it being a bit blurry. It impacts the realism a bit but I think it looks pretty cool :)<i>I will take any suggestions though</i>
+                    </p>
+                    <br>
+                </div>
+            </div>
+            <pe id="particles"></pe>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="parts">Particle System</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/particles.mp4" alt="demonstartion of PRM.pde" width="50%" height="50%"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        Rocket powered kiwi of the future. <br>
+                        For the particle system, the kiwi will spit particles out from behind him in a cone, mimicking a rocket booster. <br>
+                        They are diamond shaped because we thought that looked pretty good compared to more detailed spheres. <br>
+                        The particles start out a solid yellow color and over their lifetime turn red then brown and fade out. <br>
+                        The direction of the particles also changes as the velocity changes and the trail will get longer if he is going faster. <br>
+                        When the kiwi is coming down or going up the spaceship beams, his booster will not be activated. <br>
+                        Additionally, if the goal ship has been moved into an unreachable position, his booster will stop. <br>
+                        I think this does a really good job of looking like he's boosting through space and its silly :) <br>
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        Not too many challenges here. I (Noah) already had experience with this from HW1 as well so, again, just kinda copied code. <br>
+                        Hardest part was getting a decent looking gradient. 
+                    </p>
+                    <br>
+                </div>
+            </div>
+            <pe id="camera"></pe>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="camera1">Rendering: Camera and Lights</h3>
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/camera.mp4" alt="demonstartion of PRM.pde" width="37.5%" height="50%"></video>
+                <video controls autoplay loop muted src="../data/project1/camerafollow.mp4" alt="demonstartion of PRM.pde" width="37.5%" height="50%"></video>
+                <br>
+
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p>
+                        Camera usage is important to change viewing angles and lights are important to actually see things. <br>
+                        We implemented both a camera system and lights in our simulation. <br>
+                        Starting with the camera: <br>
+                        1. Camera movement can be controlled using the keybinds below. <br>
+                        2. First person and 3rd person views of the agent are available using the keybinds below. <br>
+                        3. Most of the camera code is provided by Professor Guy, however, modifications were made. <br>
+                        <br>
+                        Lighting:<br>
+                        1. There is a slight ambient light over the whole scene. <br>
+                        2. There is a directional light to simulate light radiating from corona of the black hole. <br>
+                        3. The kiwi has a point light that follows above him to light him up and also make him entering the spaceships look cool. <br>
+                        <br>
+
+                        The lights serve to make the scene a bit more realistic and also keep the kiwi in view. 
+                    </p>
+                    <br>
+
+                    <h4>Keybinds</h4>
+                    <p>
+                        r: Reset obstacles and start/goal <br>
+                        R: reset camera position to initial <br>
+                        p: Toggle pausing the scene <br>
+                        w/a/s/d: move the position of the camera  <br>
+                        space/control: move vertically pos/neg   <br>
+                        hold shift: increase speed of movement  <br>
+                        up/down/left/right: change viewing angle of camera  <br>
+                        Hold v: Follow agent from behind (w to move up, s to move down) <br>
+                        f: toggle first person view <br>
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        There were a few challenges in this respect. <br>
+                        Getting the positioning of the camera right for first person and 3rd person was a bit of a tough task. <br>
+                        Additionally, getting the lighting working at first was a little interesting because I had to learn how processing actually does lighting. <br>
+                        Initially, the kiwi was going to be walking on a floor with a spotlight above him following him and casting a circular light at his feet. <br>
+                        I spent a lot of time on this not working until I realized it wasn't working because the floor was one big cube rather than many small ones. <br>
+                        Unfortunately, all that work was scrapped for a definitely cooler scene. 
+                    </p>
+                    <br>
+                </div>
+            </div>
+            <pe id="part3"></pe>
+        </article>
+
+        <article>
+            <div class="card">
+                <h3 id="part33">Part 3: Crowd Simulation</h3>
+                <!-- <h4>Exercise #1</h4>  -->
+                <hr>
+                <video controls autoplay loop muted src="../data/project1/crowd.mp4" alt="demonstartion of crowd simulation" width="37.5%" height="50%"></video>
+                <video controls autoplay loop muted src="../data/project1/crowdobst.mp4" alt="demonstartion of crowd simulation" width="37.5%" height="50%"></video>
+            
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p> 
+                        Using the TTC forces between agents itself, and obstacles, as well as seperation forces, agents head to the destination, and avoid other objects on the way. <br>
+                        We integrated this by using the TTC-force assignment.<br>
+                        At each frame, the agents calculate ttc and seperation force between the agent and other objects and reflect the force to change the direction. 
+                    </p>
+                    <br>
+
+                    <h4>Keybinds</h4>
+                    <p>
+                        space: toggle pause <br>
+                        r: reset scene 
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        The issue here was the collision and movement were not smooth as the number of agents increases. <br>
+                        When multiple agents are jammed into one place, it is hard to orient the agents. <br>
+                        This could result in smooth movements when obstacles have certain distance enough for agents to pass between the obstacles. <br>
+                        A possible future fix for this could be to integrate path planning and add forces towards the agents goal node in the path.
+                    </p>
+                    <div class="source">
+                        <a href="../src/project1/part3.pde">Source Code Zip (Only Crowd Sim)</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Credits -->
+        <article>
+            <div class="card">
+                <h3 id="credits">Credits and Sources</h3>
+                <hr>
+                <div class="container">
+                    <p>
+                        <b>Website:</b> <br>
+                        All credit goes to Lauren Oliver for layout and colors. <br>
+                        (except the sticky header, that was Noah :p) <br>
+
+                        <br>
+                        
+                        <b>Part #1: PRM</b> <br>
+                        Credit to professor Guy for the starting code <br>
+                        Credit to whatever website I looked at last year for our implementation of A* <br>
+
+                        <br>
+
+                        <b>Part #2: Navigation Simulation</b> <br>
+                        Camera Code: Professor Guy (modified) <br>
+                        Kiwi: Lauren Oliver <br>
+                        Spaceship:<a href="https://www.cgtrader.com/free-3d-models/space/spaceship/free-flying-saucer">Free Flying Saucer</a> <br>
+                        Cylinder:<a href="https://vormplus.be/full-articles/drawing-a-cylinder-with-processing">Drawing a Cylinder with Processing</a> <br>
+                        Planet Textures:<a href="http://planetpixelemporium.com/planets.html">Planet Pixel Emporium</a> <br>
+                        Black Hole Image:<a href="https://wallpaperaccess.com/full/476721.jpg">Some Wallpaper Site</a> <br>
+                         
+                        <br>
+
+                        <b>Part #3: Crowd Simulation</b> <br>
+                        Boilerplate code from TTC exercise <br>
+
+                    </p>
+                    <br>
+                </div>
+            </div>
+        </article>
+    </section>
+    <script src="../scripts/script.js"></script>
+</body>
+
+<footer>
+    <a href="#top">Return to Top</a>
+    <a href="../index.html">Return to Home</a>
+</footer>
+
+</html>
