@@ -268,9 +268,9 @@ function setup() {
     objLoader = new OBJLoader();
     mtlLoader = new MTLLoader();
     
-    mtlLoader.load("../../models/bath.mtl", function(mtl) {
+    mtlLoader.load("../models/bath.mtl", function(mtl) {
         objLoader.setMaterials(mtl);
-        objLoader.load("../../models/bath.obj", function(obj) {
+        objLoader.load("../models/bath.obj", function(obj) {
             bathHB = new THREE.Mesh(
                 new THREE.BoxGeometry(22,17.5,52),
                 new THREE.MeshBasicMaterial(
@@ -303,7 +303,7 @@ function setup() {
         console.error(error);
     });
 
-    loader.load('../../models/kiwi.glb', function(gltf) {
+    loader.load('../models/kiwi.glb', function(gltf) {
         kiwi = gltf.scene;
         kiwi.scale.set(5,5,5);
         kiwi.position.y = 7.5;
