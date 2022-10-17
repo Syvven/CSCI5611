@@ -82,7 +82,7 @@ function setup() {
     // other setup items go here
 
     // adds texture for the ground
-    var groundTexture = new THREE.TextureLoader().load("../../models/floor-min.png");
+    var groundTexture = new THREE.TextureLoader().load("../models/floor-min.png");
     groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
     groundTexture.repeat.set(10,10);
     groundTexture.encoding = THREE.sRGBEncoding;
