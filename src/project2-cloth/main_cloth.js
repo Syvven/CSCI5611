@@ -270,36 +270,35 @@ function setup() {
     
     mtlLoader.load("../../models/bath.mtl", function(mtl) {
         objLoader.setMaterials(mtl);
-    }, undefined, function(error) {
-        console.error(error);
-    });
-
-    objLoader.load("../../models/bath.obj", function(obj) {
-        bathHB = new THREE.Mesh(
-            new THREE.BoxGeometry(22,17.5,52),
-            new THREE.MeshBasicMaterial(
-                {
-                    transparent: true,
-                    opacity: 0
-                }
-            )
-        );
-
-        obj.scale.set(0.03,0.03,0.03);
-        obj.rotation.y = Math.PI/2;
-        obj.position.y = 0.1
-
-        bathHB.position.set(
-            obj.position.x,
-            obj.position.y+8.75,
-            obj.position.z-0.25
-        );
-
-        bath = obj;
-
-        scene.add(bathHB);
-        scene.add(obj);
-        controlArr.push(bathHB);
+        objLoader.load("../../models/bath.obj", function(obj) {
+            bathHB = new THREE.Mesh(
+                new THREE.BoxGeometry(22,17.5,52),
+                new THREE.MeshBasicMaterial(
+                    {
+                        transparent: true,
+                        opacity: 0
+                    }
+                )
+            );
+    
+            obj.scale.set(0.03,0.03,0.03);
+            obj.rotation.y = Math.PI/2;
+            obj.position.y = 0.1
+    
+            bathHB.position.set(
+                obj.position.x,
+                obj.position.y+8.75,
+                obj.position.z-0.25
+            );
+    
+            bath = obj;
+    
+            scene.add(bathHB);
+            scene.add(obj);
+            controlArr.push(bathHB);
+        }, undefined, function(error) {
+            console.error(error);
+        });
     }, undefined, function(error) {
         console.error(error);
     });
