@@ -20,9 +20,13 @@
 <!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
 <ul id="nav">
     <li><a href="../index.html">Home</a></li>
-    <li><a href="#cloth1">Cloth</a></li>
+    <li><a href="#cloth1">Part 1</a></li>
+    <li><a href="#csim">Cloth</a></li>
+    <li><a href="#adrag">Air Drag</a></li>
+    <li><a href="#rend">Rendering</a></li>
+    <li><a href="#uint">Interaction</a></li>
     <li><a href="./project2-cloth.html">Cloth Sim</a></li>
-    <li><a href="#fluid1">Fluid</a></li>
+    <li><a href="#fluid1">Part 2</a></li>
     <li><a href="./project2-water.html">Fluid Sim</a></li>
     <li><a href="#credits">Credits</a></li>
     <li><a href="https://github.com/Syvven/CSCI5611/tree/main/src">Github Repo</a></li>
@@ -43,27 +47,286 @@
                 <h4>Art Contest Submission (Quote Included?):</h4>
                 <image src="../data/project2/kiwihero.png" alt="majestic kiwi with a cape flowing in the wind" width="50%" height="50%"></image>
                 <h4>"With great power, comes great responsibility" - Uncle Ben</h4>
-                <br>
             
                 <div class="container">
                     <h4>Overview</h4>
                     <p> 
-                        
+                        The goal of part 1 of project 2 was to implement a realistic looking rope or cloth simulation
+                            utilizing a mass-spring system. <br>
+                        The required feature is multiple ropes in at least 2D that interact with the environment. <br>
+                        The features that I implemented include a Cloth simulation in 3D with a camera, lights, and 
+                            models that the cloth can interact with. <br>
+                        Additionally, I implemented air drag and user interaction into the simulation to make it more 
+                            realistic. <br>
+                        In depth explanations of each individual feature, as well as control schemes, are in the next 
+                            section. <br>
+                        Overall, I am very happy with how this turned out. It doesn't have quite as fun of a scene as 
+                            previous work but the user controls are much more extensive. <br>
+                        If I come back to this in the future, spicing the scene up a bit would definitely be one of my
+                            priorities :) <br>
+                        Another future addition I might add is tearing the cloth because it seems kind of doable and I
+                            have some thoughts on how to implement. 
+                        <b id="csim"></b>
                     </p>
                     <br>
 
-                    <h4>Features</h4>
+                    <h4>Cloth Simulation (Multiple Ropes)</h4>
                     <p>
-                       
+                        <b>Features</b> 
+                        <br>
+                        The simulation includes a single cloth, initially paused in space. <br>
+                        The cloth implements a mass spring system in order to give the, well, cloth look. <br>
+                        Although all of the values can be changed for the cloth, the initial values of <br>
+                            - Spring Coefficient = 100 <br>
+                            - Damping Factor = 50 <br>
+                            - Mass = 1 <br>
+                            - Rest Length = 3 <br>
+                        provide the best looking results in my opinion. <br>
+                        It consists of 15 vertical nodes and 10 horizontal nodes and runs at 20-40fps depending on 
+                            what modifications were made to the simulation using the controls. <br>
+                        Utilizing the python code provided in class as a base, the forces are calculated in both
+                            vertical and horizontal directions along the nodes. <br>
+                        Additionally, gravity and drag forces are factored in. <br>
+                        Using typical eulerian integration led to not good results, thus, I replaced that with
+                            Heun's integration method, which is second-order accurate, and 350 timesteps per frame. <br>
+                        This produces good looking results while not being too slow and not doing, frankly, 
+                            unnecessary work that another method like RK4 might do. <br>
+                        Additionally, there are multiple obstacles that the cloth can interact with. <br>
+                        The main obstacle is a kiwi whose hitbox consists of a sphere for the head and a sphere for 
+                         the body, both different sizes. <br>
+                        Collision is handled by checking if the point is inside the sphere and moving it out 
+                            like we have for previous assignments. <br>
+                        There is also a bathtub which has a box-like hitbox. <br>
+                        Collision handling for the bathtub works by checking if the point is in the bounding box,
+                        then determining which edge its closest too, and moving it to that edge. <br>
+
+                        <br><br>
+                        <b>Challenges</b>
+                        <br>
+                        There were numerous challenges with this portion, some overcome and some still unresolved. <br>
+                        Starting with the cloth itself, one of the first challenges that I encountered was obviously 
+                         the parameter tuning. <br>
+                        It was an interesting process to try to figure out which parameters made it look nice. <br> <br>
+                        The second, and probably largest challenge I faced with the cloth was one of integration. <br>
+                        From the start of making the cloth, I attempted to implement RK4 integration and thought I 
+                            had it working. <br>
+                        The movement of the cloth looked natural and all seemed well, however, issues started arising 
+                            when I attempted to implement collision and movement of the cloth. <br>
+                        The cloth seemed to not move in the x-direction and, while being reactive to collision, did 
+                            not go back to a resting state after the collision. <br>
+                        I racked my brain for a solid day trying to figure out what was going wrong. <br>
+                        I tried everything from changing parameters more, to changing the way the forces worked, 
+                            to combing through my code to see if I was maniuplating vectors incorrectly. <br>
+                        Nothing seemed to work. <br>
+                        It was not until I took a much deeper look at the integration that I realized I was doing 
+                            it wrong. <br>
+                        I took an hour or two to look more into RK4 integration with acceleration, position, and 
+                            velocity, and came out with a better understanding of it. <br>
+                        I threw away all my RK4 integration code, and implemented Heun's method, and, after some 
+                        tinkering, it finally worked as it should. <br><br>
+
+                        The third challenge that I faced, and still am facing, came much later in the process, almost 
+                            at the end. <br>
+                        After tinkering with some PhysicalMaterial properties and getting the cloth to look like glass
+                            with condensation on it, my girlfriend suggested that I put in a little bathtub model and 
+                            have the kiwi sit in the bathtub behind the cloth like a curtain. <br>
+                        I thought this would be really funny so I decided to put it in. <br>
+                        With the bathtub model loaded, I realized I would need to implement collision detection with
+                            a Box object. <br>
+                        After some thinking, I got it mostly working, however, with corners and edges, the geometry 
+                            kind of clips through. <br>
+                        It looked bad if I made the points get pushed much further out so I just left it as it wasn't 
+                            too awful. <br>
+                        This is an issue that remains unsolved though, and applies to the spheres as well. <br>
+                        If the vertices stretch far enough apart, the spheres can just go straight through the gaps
+                            between the vertices. <br>
+                        This problem might be able to be solved by implementing ripping and tearing, however,
+                            I do not have the time for that at the moment. <br>
+
+                        <b id="adrag"></b>
                     </p>
                     <br>
 
-                    <h4>Challenges</h4>
+                    <h4>Air Drag</h4>
                     <p>
-                        
+                        <b>Features</b>
+                        <br>
+                        Air drag allows the cloth to look even more realistic by applying a force proportional to the 
+                        alignment of the face normal and the wind direction. <br>
+                        The simulation represents drag using the equation shown in class where the total 
+                            force is equal to <br>
+                        <b>0.5 * dragCoefficient * airDensity * |v|^2 * n</b> <br>
+                        where |v|^2 * n is equal to <br>
+                        <b>nStar * ( v.length() * v.dot( nStar ) ) / ( 2 * nStar.length() )</b> <br>
+                        where v is equal to <br>
+                        <b>(v1 + v2 + v3 + v4)/4 - windForce</b> <br>
+                        and nStar is equal to <br>
+                        <b>(p3 - p1) x (p2 - p1)</b> <br>
+                        The drag force is then split equally between each of the four vertices.
+                        I don't know what else to say about this besides that it makes it look really good!
+
+                        <br><br>
+                        <b>Challenges</b>
+                        <br>
+                        Not many challenges came with air drag.
+                        The biggest challenge is that, with drag on and too big of a rest length, if the cloth 
+                        is moved too fast, it'll disappear. <br>
+                        This is slightly remedied by lowering the Spring Constant. 
+                        Another challenge is that, with air drag on, the cloth being on the ground doesn't look 
+                            *too* great. <br>
+                        It kinda bunches up in one spot rather than spreading out like it does without drag. <br>
+                        This isn't awful in the end and could be remedied by handling collision between vertices,
+                            however,
+                        I didn't implement that. <br>
+                        Besides those, implementing drag was relatively hiccup free.
+
+                        <b id="rend"></b>
                     </p>
+                    <br>
+
+                    <h4>3D Rendering, Camera, Lights, Models</h4>
+                    <p>
+                        <b>Features</b>
+                        <br>
+                        The rendering of the scene really brings it to life. <br>
+                        To start, the whole scene is rendered in 3d with models, lights, camera, and controls. <br>
+                        The controls will be expanded on in the next section. <br>
+                        The camera is a THREE.js perspective camera utilizing orbit controls to look around. <br>
+                        Left clicking and dragging will move around in an orbit motion. <br>
+                        Right clicking allows the user to move the position the camera is looking at. <br>
+                        Scrolling with the mouse allows the user to zoom in and out on the focus point. <br>
+                        There is a hemisphere light in the scene as well as a point light near the middle. <br>
+                        The kiwi and bathtub are rendered using glb and obj models respectively. <br>
+                        The cloth is rendered using a THREE.js PlaneGeometry with a MeshPhysicalMaterial to allow for 
+                            a sort of glass look if the user wants. <br>
+                        This method of rendering also allows the user to change vertex colors if they wish to make a 
+                            gradient. <br>
+                        There is also a floor and the axes are labeled (r,g,b to x,y,z).
+
+                        <br><br>
+                        <b>Challenges</b>
+                        <br>
+                        A couple challenges were faced here. <br>
+                        Definitely the biggest challenge would have to be the rendering of the cloth itself. <br>
+                        When I started, I was new to THREE.js, and am still new to 3d rendering in general, so 
+                            I decided to use THREE's BufferGeometry in order to define the vertices myself. <br>
+                        This did end up working, however, I was doing much more work than I had to, and led to 
+                            some issues down the line. <br>
+                        When I attempted to add smooth shading to the cloth, nothing I did worked, so I looked a bit
+                            and found out it was because I was using plain BufferGeometry rather than something like 
+                            PlaneGeometry. <br>
+                        Once I switched over, not only was it smooth shaded, but the vertices were much easier to change 
+                            as well. <br>
+                        Outside of that, not too many major issues were encountered with this portion.
+                        <b id="uint"></b>
+                    </p>
+                    <br>
+
+                    <h4>User Interaction</h4>
+                    <p>
+                        <b>Features</b>
+                        <br>
+                        The user interaction of the simulation is quite extensive. <br>
+                        Almost every aspect of it can be changed with the control panel on the right. <br><br>
+
+                        <b>Cloth Controls</b>
+                        <br>
+                        Pretty much every parameter can be changed including: <br>
+                        - Spring Coefficient <br>
+                        - Damping Factor <br>
+                        - Vertex Mass <br>
+                        - Rest Length <br>
+                        Additionally, you can pin and move individual vertices. <br>
+                        The pin options include the four corners and the four sides. <br>
+                        When the corners are pinned, a sphere appears around them that you can grab
+                            to move the vertex. <br>
+                        If I come back to it in the future, I want to add the ability to pin any vertex. <br>
+
+                        <br> 
+                        <b>Cloth Color Controls</b>
+                        <br> 
+                        All of the aspects of physical material can be changed including: <br>
+                        - Attenuation Color <br>
+                        - Attenuation Distance <br>
+                        - Clear Coat <br>
+                        - Clear Coat Roughness <br>
+                        - Index of Refraction <br>
+                        - Reflectivity <br>
+                        - Sheen <br>
+                        - Sheen Roughness <br>
+                        - Sheen Color <br>
+                        - Specular Intensity <br>
+                        - Specular Color <br>
+                        - Thickness <br>
+                        - Transmission <br>
+                        - Opacity <br>
+                        Additionally, there is a setting that makes each vertex have a color based on 
+                            its current position. <br>
+                        This setting is marked as "vertexColors" and can be toggled on or off. <br>
+                        If the setting is on, and you wish to clear the color, toggle it off
+                            then set the transmission setting to 0 and back. <br>
+                        If the setting is off, and you wish to enable to colors, toggle it on
+                            then set the transmission setting to 0 and back. <br>
+                        Additionally, if you want one solid color, turn the setting off, then
+                            change the color setting and do the same with transmission again. <br>
+                        It is worth it to note that you can't really make it a flat color. <br>
+                        When vertexColors are off, you can change some of the coloring but it won't be flat. <br>
+
+                        <br>
+                        <b>Force Controls</b>
+                        <br>
+                        You can control different forces as well, including: <br>
+                        - Gravity <br>
+                        - Drag Force Constants <br>
+                        - Wind X, Y, and Z <br>
+
+                        <br>
+                        <b>Sim Controls</b>
+                        <br>
+                        The sim controls let you change various aspects about the simulation itself. <br>
+                        They include: <br>
+                        - Resetting <br>
+                        - Pausing / Unpausing <br>
+                        - Enabling / Disabling Drag <br> 
+                        - Increasing / Decreasing # of Timesteps <br> 
+                        - Increasing / Decreasing dt of each timestep <br>
+                        - Spawning / Despawning the kiwi and bath <br><br>
+                        A couple things to note here: <br>
+                        - Resetting the simulation will reset the cloth to its original position, use this if it breaks
+                            or change the rest length. <br>
+                        - Increasing / Decreasing timesteps will require modification to values to keep behavior same. <br>
+                        - The same goes for dt
+                        - Kiwi and Bath should only be spawned / despawned once they are FULLY loaded or unloaded. <br>
+                        
+                        <br>
+                        <b>Object Control</b>
+                        <br>
+                        Each object in the scene can be controlled through the mouse. <br>
+                        If the user spawns in the kiwi or the bath, they both can be dragged around by clicking on them. <br>
+                        The dragging happens on the plane of the camera so it can be a bit hard to position the objects right. <br>
+                        Additionally, any of the four corner vertices can be moved around in the same way if they are pinned. <br>
+
+                        <br>
+                        <b>General Note</b>
+                        <br>
+                        Although there are a lot of options for changing aspects, going overboard will break the simulation. <br>
+                        In some cases, resetting will fix. In all cases, reloading the page will fix. <br>
+                        It is fun to mess around with it, though, and see what makes the cloth break :)
+
+                        <br><br>
+                        <b>Challenges</b>
+                        <br>
+                        I did not run into too many challenges with this portion. <br>
+                        It was interesting to get used to API of THREE, 
+                            however, it was fairly easy once I got into it. <br>
+                        Dat.gui is also very easy to use. <br>
+                        Overall, no complaints here :)
+                        <b></b>
+                    </p>
+                    <br>
+
                     <div class="source">
-                        <a href="../src/project1/PRM.pde">Source Code Zip (Only PRM.pde)</a>
+                        <a href="../src/project2-zips/cloth.zip">Source Code Zip</a>
                     </div>
                 </div>
             </div>
@@ -96,7 +359,7 @@
                     </p>
 
                     <div class="source">
-                        <a href="../src/project1/project1-nav.zip">Source Code Zip (All Part 2 Files)</a>
+                        <a href="../src/project2-zips/water.zip">Source Code Zip</a>
                     </div>
                 </div>
             </div>
