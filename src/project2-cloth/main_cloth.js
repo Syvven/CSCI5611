@@ -172,21 +172,11 @@ function setup() {
         side: THREE.DoubleSide,
         vertexColors: true
     });
-    // material.reflectivity = 0
-    // material.transmission = 1
-    // material.roughness = 0.5
-    // material.metalness = 0
-    // material.clearcoat = 0.3
-    // material.clearcoatRoughness = 0.25
-    // material.color = new THREE.Color(0xffffff)
-    // material.ior = 1.7
-    // material.thickness = 10.0
+    
     cloth = new THREE.Mesh(geo, material);
     scene.add(cloth);
 
     dampFricU = new THREE.Vector3(0,0,0);
-    // controlArr = Array(1);
-    // controlArr[0] = scene.children[scene.children.length];
 
     controlArr = [];
     dragControls = new DragControls(controlArr, camera, renderer.domElement);
@@ -280,6 +270,8 @@ function setup() {
     
     mtlLoader.load("../../models/bath.mtl", function(mtl) {
         objLoader.setMaterials(mtl);
+    }, undefined, function(error) {
+        console.error(error);
     });
 
     objLoader.load("../../models/bath.obj", function(obj) {
@@ -308,6 +300,8 @@ function setup() {
         scene.add(bathHB);
         scene.add(obj);
         controlArr.push(bathHB);
+    }, undefined, function(error) {
+        console.error(error);
     });
 
     loader.load('../../models/kiwi.glb', function(gltf) {
