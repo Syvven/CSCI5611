@@ -82,13 +82,14 @@
                             - Mass = 1 <br>
                             - Rest Length = 3 <br>
                         provide the best looking results in my opinion. <br>
-                        It consists of 15 vertical nodes and 10 horizontal nodes and runs at 20-40fps depending on 
+                        It consists of 15 vertical nodes and 10 horizontal nodes and runs at 20-60fps depending on 
                             what modifications were made to the simulation using the controls. <br>
                         Utilizing the python code provided in class as a base, the forces are calculated in both
                             vertical and horizontal directions along the nodes. <br>
                         Additionally, gravity and drag forces are factored in. <br>
                         Using typical eulerian integration led to not good results, thus, I replaced that with
-                            Heun's integration method, which is second-order accurate, and 350 timesteps per frame. <br>
+                            Heun's integration method, which is second-order accurate, and 200 base timesteps per frame
+                            with a base dt of 1/200. <br>
                         This produces good looking results while not being too slow and not doing, frankly, 
                             unnecessary work that another method like RK4 might do. <br>
                         Additionally, there are multiple obstacles that the cloth can interact with. <br>
