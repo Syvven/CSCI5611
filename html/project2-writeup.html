@@ -66,6 +66,7 @@
                             priorities :) <br>
                         Another future addition I might add is tearing the cloth because it seems kind of doable and I
                             have some thoughts on how to implement. 
+                            <br>
                         <b id="csim"></b>
                     </p>
                     <br>
@@ -149,6 +150,7 @@
                     </p>
                     <br>
 
+                    <video controls autoplay loop muted src="../data/project2/air-drag.mp4" alt="drag" width="50%" height="50%"></video>
                     <h4>Air Drag</h4>
                     <p>
                         <b>Features</b>
@@ -180,7 +182,7 @@
                         This isn't awful in the end and could be remedied by handling collision between vertices,
                             however,
                         I didn't implement that. <br>
-                        Besides those, implementing drag was relatively hiccup free.
+                        Besides those, implementing drag was relatively hiccup free.<br>
 
                         <b id="rend"></b>
                     </p>
@@ -219,11 +221,16 @@
                             PlaneGeometry. <br>
                         Once I switched over, not only was it smooth shaded, but the vertices were much easier to change 
                             as well. <br>
-                        Outside of that, not too many major issues were encountered with this portion.
+                        Outside of that, not too many major issues were encountered with this portion. <br>
+
                         <b id="uint"></b>
                     </p>
                     <br>
-
+                    <video controls autoplay loop muted src="../data/project2/int1.mp4" alt="interaction" width="25%" height="50%"></video>
+                    <video controls autoplay loop muted src="../data/project2/int2.mp4" alt="interaction" width="25%" height="50%"></video>
+                    <br>
+                    <video controls autoplay loop muted src="../data/project2/int3.mp4" alt="interaction" width="25%" height="50%"></video>
+                    <video controls autoplay loop muted src="../data/project2/int4.mp4" alt="interaction" width="25%" height="50%"></video>
                     <h4>User Interaction</h4>
                     <p>
                         <b>Features</b>
@@ -332,7 +339,7 @@
                             however, it was fairly easy once I got into it. <br>
                         Dat.gui is also very easy to use. <br>
                         Overall, no complaints here :)
-                        <b></b>
+                        <br><br>
                     </p>
                     <br>
 
@@ -348,7 +355,7 @@
             <div class="card">
                 <h3 id="kiwispace">Part 2: SPH Fluid</h3>
                 <hr>
-                <image src="../data/project2/oiter.png" alt="oiter" width="50%" height="50%"></image>
+                <image src="../data/project2/oiter.jpg" alt="oiter" width="50%" height="50%"></image>
                 <br>
 
                 <div class="container">
@@ -358,22 +365,31 @@
                         Each particle has a radius around it in which it wants to maintain a certain density 
                             and each neighbor particle will be repelled or pulled in depending on that current density. <br>
                         There are a couple values in this simulation that are relevant: <br>
-                        - ks: Stiffness - initially 1000 <br>
-                        - ksr: Smoothing radius (h) - initially 60 <br>
-                        - krd: Rest Density - initially 60 <br>
-                        - ksN: Near Stiffness - initially 1000 <br>
+                        - ks: Stiffness - initially 200 <br>
+                        - ksr: Smoothing radius (h) - initially 30 <br>
+                        - krd: Rest Density - initially 1 <br>
+                        - ksN: Near Stiffness - initially 200 <br>
                         Akin to the cloth simulation, all of these values can be tuned in simulation. <br>
                         An attempt at a spatial grid to speed up the nearest neighbors search was made,
-                            however, it did not work very well :(. <br>
-                        The simulation starts with 1125 particles and runs at 15-20fps. <br>
+                            however,<s>it did not work very well :(.</s>it actually worked! <br>
+                        The simulation starts with 2000 particles and runs at 0-40fps depending on settings. <br>
+                        It is assumed that the number of particles will follow this formula:<b>x^2 * nLevels</b>for ... reasons. <br>
+                        Also, for some reason, some of the particles disappear when looking through the glass. <br>
+                        Its not a huge deal, just worth noting. <br>
+                        <br>
                     </p>
                     <br>
 
+                    <video controls autoplay loop muted src="../data/project2/fluid.mp4" alt="oiter..." width="50%" height="50%"></video>
                     <h4>Features</h4>
                     <p>
+                        <b>Control Menu</b>
+                        <br>
                         Like the cloth simulation, mose of the values can be tuned in simulation. <br>
-                        This includes ks, ksr, krd, and ksN. <br>
-                        Additionally, the simulation can be paused and reset through the drop down menu. <br>
+                        This includes particle values such as ks, ksr, krd, and ksN. <br>
+                        Additionally, you can change gravity force, particle radius, number of particles, and number of cells. <br>
+                        The simulation can also be paused and reset through the drop down menu. <br>
+                        When changing number of particles, radius of particles, and number of cells, the simulation will auto reset. <br>
                         The other piece of interaction is the walls that you can drag to move around the water. <br>
                         There are four walls surrounding the water. Clicking on the arrows on each of theses will 
                             allow you to drag them back and forth. <br>
@@ -381,6 +397,37 @@
                             effectively creating a sort of see through box for the water. <br>
                         There is also the same camera as the cloth simulation. <br>
                         Left click to orbit, right click to pan, scroll to zoom. <br>
+
+                        <br>
+                        <b>Spatial Grid</b>
+                        <br>
+                        The simulation, under the hood, features a spatial grid structure to speed up nearest neighbor search. <br>
+                        The grid consists of a variable number of boxes in a 3D grid. <br>
+                        The number of boxes in the X, Y, and Z directions can be changed in the code, however, 
+                            it is assumed that the number in each direction will be the same. <br>
+                        The boxes are then given a width, height, and length based on the number. These will generally all be the same. <br>
+                        Each box keeps track of a few things: <br>
+                        - Particles contained in the box <br>
+                        - Neighboring Boxes <br>
+                        - Center of the box <br>
+                        The boxes are kept in a 3D array to allow for efficient neighbor access. <br>
+                        Each time a particle is updated, it is checked to see if it is no longer in its current box. <br>
+                        If this is so, it changes the box and is added to the new box's particle list. <br>
+                        Each box has a list of its neighboring boxes. This allows easy lookup for nearby particles. <br>
+                        An assumption of this grid is that the smoothing radius (h) will never be much more than
+                            the width/length/heigh of a single box. <br>
+                        Following this assumption allows the particle's only looking at their neighbor boxes to be 
+                            100% accurate. <br>
+                        However, this assumption does not have to be followed exactly. <br>
+                        For example, with the base settings of the sim the grid is 20x20x20 and each box 
+                            has a length/width/height of 20 (400/20 = 20), but the smoothing radius is 30. <br>
+                        This still results in good looks because an acceptable number of particles aren't quite accurate,
+                            but most are. <br>
+                        This grid speeds up the sim CONSIDERABLY. <br>
+                        With 1125 particles in a single box grid, the simulation will run at around 10 fps. <br>
+                        With 2000 particles in a 20x20x20 grid, the sim runs at 25-30 fps! Nearly 3x as fast! <br>
+                        The grid is not entirely optimized, as resets take a second, however, a 3x speedup is nothing
+                            to balk at. <br><br>
                     </p>
                     <br>
 
@@ -398,8 +445,26 @@
                         Obviously, it ran too slow to look *really* good. That's just the nature of basic NN search. <br>
                         So, looking at how Ryan Guy had solved that problem, he had implemented a spatial grid. <br>
                         It seemed like a relatively easy concept to implement, so I wrote out the code for the grid,
-                            and got it *kind of* working. <br>
-                        
+                            and, at first, it wasn't working. <br>
+                        I worked out a few bugs I had noticed but it just still was not doing what I wanted it to. <br><br>
+                        At this point, I basically gave up. <br>
+                        I had a machine learning homework due at the end of the week. <br>
+                        I had (still have) covid (this one really sucked, missed a quiz because of it). <br>
+                        I had another project due on wednesday. <br>
+                        My cats were being evil. <br>
+                        I don't normally give up on things, but this was just extra credit and there's always another time. <br>
+                        HOWEVER...I am addicted to finishing things. <br>
+                        I love this class and I want all my work to look as good as it can. <br>
+                        As I started writing this portion (Sunday 23), I thought to myself "I have to be close. I should 
+                            at least try." <br>
+                        So I looked back at my code with a fresh mind. <br>
+                        I found one bug. <br>
+                        I found another bug. <br>
+                        I found a third. <br>
+                        Now it worked. <br>
+                        :) <br>
+                        Fin. 
+                        <br><br>
                     </p>
 
                     <div class="source">
@@ -424,12 +489,23 @@
                         <br>
                         
                         <b>Part #1: Cloth</b> <br>
-                        
+                        - Larne for the kiwi <br>
+                        - Prof. Guy for the base force calculation <br>
+                        - Bathtub:<a href="https://www.cgtrader.com/items/2766614/download-page">Splish Splash</a> <br>
+                        - Dat.gui:<a href="https://github.com/dataarts/dat.gui">Linky</a> <br>
+                        - Stack Overflow as usual (answers, not code :p)
 
+                        <br>
                         <br>
 
                         <b>Part #2: SPH Fluid</b> <br>
-                        
+                        - Prof. Guy for the base force calculation (hmm seems like a pattern.) <br>
+                        - Ryan Guy for the motivation to do SPH, as well as spatial grid idea <br>
+                        - Funny that there are two Guys who do similar things <br>
+                        - No code was referenced, its just a cool project:<a href="https://github.com/rlguy/SPHFluidSim">rlguy/SPHFluidSim</a> <br>
+                        - His other stuff is cool too <br>
+                        - Maybe I'll try a simple version of FLIP fluid sim for final project hmmmm...
+                        <br><br>
                     </p>
                     <br>
                 </div>
