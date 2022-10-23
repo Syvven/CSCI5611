@@ -13,9 +13,9 @@ var renderer, camera, scene, orbitControls;
 var stats, prevTime, gui, dragControls;
 
 // Cell / Particle info
-var numCellsX = 1; var cellW = 400/numCellsX;
-var numCellsY = 1; var cellH = 400/numCellsY;
-var numCellsZ = 1; var cellL = 400/numCellsZ;
+var numCellsX = 10; var cellW = 400/numCellsX;
+var numCellsY = 10; var cellH = 400/numCellsY;
+var numCellsZ = 10; var cellL = 400/numCellsZ;
 var tW = cellW * numCellsX;
 var tL = cellL * numCellsZ;
 var tH = cellH * numCellsY;
@@ -28,23 +28,23 @@ var cells = Array(numCellsX).fill(null).map(() =>
     )
 );
 
-var krd = 5; 
-var ksN = 1000;
-var ks = 1000;
-var ksr = 60;
+var krd = 1; 
+var ksN = 5000;
+var ks = 5000;
+var ksr = 40;
 var gravity = new THREE.Vector3(0, -164, 0);
-var numParticles = 1125; // make sure this divided by nLevels can be square rooted
+var numParticles = 2000; // make sure this divided by nLevels can be square rooted
 var nLevels = 5; 
 var perLevel = numParticles / nLevels
 var numXZ = Math.sqrt(perLevel);
 var pRad = 1;
-var drawRad = 18*pRad;
+var drawRad = 17*pRad;
 console.log(pRad);
 var particles = Array(numParticles);
 var particlesCreated = 0;
 
 // sim info
-var numTimesteps = 5;
+var numTimesteps = 10;
 var paused = true;
 var lWall, rWall, fWall, bWall;
 
@@ -64,6 +64,7 @@ class Cell {
         this.points = [];
         this.adjCells = [];
     }
+    // this should be called after all cells are created
     getAdjacent(i, j, k) {
         if (inBounds(i+1, j, k)) this.adjCells.push(cells[i+1][j][k]);
         if (inBounds(i, j+1, k)) this.adjCells.push(cells[i][j+1][k]);
@@ -318,13 +319,6 @@ function setup() {
                     )
                 );
                 cells[i][j][k] = cell;
-                // // cube representation just for testing
-                // var geometry = new THREE.BoxGeometry( cellW, cellL, cellH );
-                // var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-                // var cube = new THREE.Mesh( geometry, material );
-                // cube.position.copy(cell.center);
-                // cube.material.wireframe = true;
-                // scene.add( cube );
             }
         }
     }
@@ -332,13 +326,6 @@ function setup() {
         for (let j = 0; j < numCellsY; j++) {
             for (let k = 0; k < numCellsZ; k++) {
                 cells[i][j][k].getAdjacent(i, j, k);
-                // // cube representation just for testing
-                // var geometry = new THREE.BoxGeometry( cellW, cellL, cellH );
-                // var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-                // var cube = new THREE.Mesh( geometry, material );
-                // cube.position.copy(cell.center);
-                // cube.material.wireframe = true;
-                // scene.add( cube );
             }
         }
     }
@@ -396,14 +383,14 @@ function createParticles() {
                 var b = Math.random();
                 var particle = new Particle(
                     new THREE.Vector3( // pos
-                        -tW*0.5+(drawRad-4)*2*i+drawRad+a,
+                        -tW*0.5+(drawRad-7.5)*2*i+drawRad+a,
                         (drawRad-4)*2*j+drawRad + j + a + b,
-                        -tL*0.5+(drawRad-4)*2*k+drawRad+b
+                        -tL*0.5+(drawRad-7.5)*2*k+drawRad+b
                     ),
                     new THREE.Vector3( // oldPos
-                        -tW*0.5+(drawRad-4)*2*i+drawRad+a,
+                        -tW*0.5+(drawRad-7.5)*2*i+drawRad+a,
                         (drawRad-4)*2*j+drawRad + j + a + b,
-                        -tL*0.5+(drawRad-4)*2*k+drawRad+b
+                        -tL*0.5+(drawRad-7.5)*2*k+drawRad+b
                     ),
                     new THREE.Vector3(0,0,0), // vel
                     new THREE.Mesh(geometry, material), // object
@@ -442,7 +429,6 @@ function createParticles() {
             }
         } 
     }
-    console.log(particles);
     particlesCreated += numParticles;
     if (particlesCreated > numParticles) particlesCreated = numParticles;
 }
@@ -489,20 +475,22 @@ function update(dt) {
         p.dens = 0.0;
         p.densN = 0.0;
 
-        if ( Math.abs(p.pos.x - p.cell.center.x) > cellW ||
-                Math.abs(p.pos.y - p.cell.center.y) > cellH ||
-                Math.abs(p.pos.z - p.cell.center.z) > cellL ) {
+        if ( Math.abs(p.pos.x - p.cell.center.x) > (cellW*0.5) ||
+                Math.abs(p.pos.y - p.cell.center.y) > (cellH*0.5) ||
+                Math.abs(p.pos.z - p.cell.center.z) > (cellL*0.5) ) {
             var i = p.cell.i; var j = p.cell.j; var k = p.cell.k;
-            if (p.pos.x > p.cell.center.x) (i == numCellsX-1) ? 0 : i++;
-            else (i == 0) ? 0 : i--;
-            if (p.pos.y > p.cell.center.y) (j == numCellsY-1) ? 0 : j++;
-            else (j == 0) ? 0 : j--;
-            if (p.pos.z > p.cell.center.z) (k == numCellsZ-1) ? 0 : k++;
-            else (k == 0) ? 0 : k--;
+            if (p.pos.x > p.cell.center.x) i += (i == numCellsX-1) ? 0 : 1;
+            else i -= (i == 0) ? 0 : 1;
+            if (p.pos.y > p.cell.center.y) j += (j == numCellsY-1) ? 0 : 1;
+            else j -= (j == 0) ? 0 : 1;
+            if (p.pos.z > p.cell.center.z) k += (k == numCellsZ-1) ? 0 : 1;
+            else k -= (k == 0) ? 0 : 1;
             
-            p.cell.points[p.index] = null;
+            p.cell.points = p.cell.points.filter((v, i, arr) => {
+                return v !== p;
+            });
             p.cell = cells[i][j][k];
-            p.cell.points[p.index] = p;
+            p.cell.points.push(p);
         }
     }
 
@@ -526,8 +514,7 @@ function update(dt) {
         }
 
         for (let j = 0; j < p.cell.adjCells.length; j++) {
-            var ind = p.cell.adjCells[j];
-            var c = cells[ind.i][ind.j][ind.k];
+            var c = p.cell.adjCells[j];
             for (let k = 0; k < c.points.length; k++) {
                 if (c.points[k] != null && i < c.points[k].listInd) {
                     var dist = p.pos.distanceTo(c.points[k].pos);

@@ -80,11 +80,12 @@
                             - Spring Coefficient = 100 <br>
                             - Damping Factor = 50 <br>
                             - Mass = 1 <br>
-                            - Rest Length = 3 <br>
+                            - Rest Length = 2 <br>
                         provide the best looking results in my opinion. <br>
-                        It consists of 15 vertical nodes and 10 horizontal nodes and runs at 20-60fps depending on 
+                        It consists of 20 vertical nodes and 12 horizontal nodes and runs at 0-60fps depending on 
                             what modifications were made to the simulation using the controls. <br>
-                        Utilizing the python code provided in class as a base, the forces are calculated in both
+                        Very helpful, I know. <br>
+                        Utilizing the code provided in class as a base, the forces are calculated in both
                             vertical and horizontal directions along the nodes. <br>
                         Additionally, gravity and drag forces are factored in. <br>
                         Using typical eulerian integration led to not good results, thus, I replaced that with
@@ -241,6 +242,10 @@
                         The pin options include the four corners and the four sides. <br>
                         When the corners are pinned, a sphere appears around them that you can grab
                             to move the vertex. <br>
+                        Possibly the biggest change you can do is changing the number of nodes 
+                            both horizontally and vertically. <br>
+                        Using this setting automatically resets the simulation to apply the node changes 
+                            as it has to completely remake the PlaneGeometry. <br>
                         If I come back to it in the future, I want to add the ability to pin any vertex. <br>
 
                         <br> 
@@ -318,6 +323,11 @@
                         <b>Challenges</b>
                         <br>
                         I did not run into too many challenges with this portion. <br>
+                        There is a slight bug with pinning the top row, where, when doing so,
+                            the entire cloth will just break. <br>
+                        I couldn't find why it was happening, and didn't think it was happening 
+                            earlier on in the process so uh... *shrug* <br>
+                        Another fix for the future perchaps... <br>
                         It was interesting to get used to API of THREE, 
                             however, it was fairly easy once I got into it. <br>
                         Dat.gui is also very easy to use. <br>
@@ -344,19 +354,52 @@
                 <div class="container">
                     <h4>Overview</h4>
                     <p>
-                       
+                        SPH fluid simulation simulates fluid using BOID-like particles. <br>
+                        Each particle has a radius around it in which it wants to maintain a certain density 
+                            and each neighbor particle will be repelled or pulled in depending on that current density. <br>
+                        There are a couple values in this simulation that are relevant: <br>
+                        - ks: Stiffness - initially 1000 <br>
+                        - ksr: Smoothing radius (h) - initially 60 <br>
+                        - krd: Rest Density - initially 60 <br>
+                        - ksN: Near Stiffness - initially 1000 <br>
+                        Akin to the cloth simulation, all of these values can be tuned in simulation. <br>
+                        An attempt at a spatial grid to speed up the nearest neighbors search was made,
+                            however, it did not work very well :(. <br>
+                        The simulation starts with 1125 particles and runs at 15-20fps. <br>
                     </p>
                     <br>
 
                     <h4>Features</h4>
                     <p>
-                        
+                        Like the cloth simulation, mose of the values can be tuned in simulation. <br>
+                        This includes ks, ksr, krd, and ksN. <br>
+                        Additionally, the simulation can be paused and reset through the drop down menu. <br>
+                        The other piece of interaction is the walls that you can drag to move around the water. <br>
+                        There are four walls surrounding the water. Clicking on the arrows on each of theses will 
+                            allow you to drag them back and forth. <br>
+                        They are capped on how far you can drag them both toward the center and away, 
+                            effectively creating a sort of see through box for the water. <br>
+                        There is also the same camera as the cloth simulation. <br>
+                        Left click to orbit, right click to pan, scroll to zoom. <br>
                     </p>
                     <br>
 
                     <h4>Challenges</h4>
                     <p>
-                       
+                        So...this one was interesting. <br>
+                        I decideded to do SPH because of two reasons: <br>
+                        - I think it looks cooler than what SWE can do. <br>
+                        - My gf was showing me what blender's water sim looks like and I got inspired to look more into it. 
+                            <br> It doesn't use SPH, it uses PIC/FLIP, however, the guy who made the blender water simulation, 
+                            Ryan L Guy, had a SPH simulation on his github <br> (and also other cool simulations),
+                            and it looked really cool. So, I was like, "yeah, I bet I could do something like that." <br>
+                        I implemented something like the code that Prof. Guy posted on canvas, but in 3D and added 
+                            the walls and controls and stuff and made the particles look cool. <br>
+                        Obviously, it ran too slow to look *really* good. That's just the nature of basic NN search. <br>
+                        So, looking at how Ryan Guy had solved that problem, he had implemented a spatial grid. <br>
+                        It seemed like a relatively easy concept to implement, so I wrote out the code for the grid,
+                            and got it *kind of* working. <br>
+                        
                     </p>
 
                     <div class="source">
