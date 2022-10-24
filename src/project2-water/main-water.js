@@ -38,7 +38,7 @@ var drawRad = 20;
 var particles;
 
 // sim info
-var numTimesteps = 5;
+var numTimesteps = 3;
 var paused = true;
 var lWall, rWall, fWall, bWall;
 
