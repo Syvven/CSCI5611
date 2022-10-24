@@ -356,14 +356,14 @@ function setup() {
     simInfoFolder.add(simInfoObj.gravity, 'y', -1000, 1000, 0.01).name("Gravity Y").onChange(() => {
         gravity.y = simInfoObj.gravity.y;
     });
-    simInfoFolder.add(simInfoObj, 'partRad', drawRad).name("Particle Radius").onChange(() => {
+    simInfoFolder.add(simInfoObj, 'partRad').name("Particle Radius").onChange(() => {
         drawRad = simInfoObj.partRad;
         reset();
     })
-    simInfoFolder.add(simInfoObj, 'numParts', numParticles).name("Total Particles").onChange(() => {
+    simInfoFolder.add(simInfoObj, 'numParts').name("Total Particles").onChange(() => {
         reset();
     })
-    simInfoFolder.add(simInfoObj, 'numCells', 0).name("Cells").onChange(() => {
+    simInfoFolder.add(simInfoObj, 'numCells').name("Cells").onChange(() => {
         numCellsX = simInfoObj.numCells;
         numCellsY = simInfoObj.numCells;
         numCellsZ = simInfoObj.numCells;
