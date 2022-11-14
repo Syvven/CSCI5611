@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../style/main.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funnies in Space</title>
+</head>
+
+<!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
+
+<!-- Kiwi Image Src: https://www.pngitem.com/middle/JhJiRw_kiwi-bird-png-transparent-image-kiwi-bird-png/ -->
+
+<header>
+    <h1 id="#top">CSCI 5611: Project 2</h1>
+    <h12 id="#top2">Noah Hendrickson (hend0800)</h12>
+</header>
+
+<!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
+<ul id="nav">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="#ik1">Part 1</a></li>
+    <li><a href="#ccd">CCD</a></li>
+    <li><a href="#over">Interaction</a></li>
+    <li><a href="#challenge">Challenges</a></li>
+    <li><a href="./project3-ik.html">Sim</a></li>
+    <li><a href="#part2">Part 2</a></li>
+    <li><a href="#credits">Credits</a></li>
+    <li><a href="https://github.com/Syvven/CSCI5611/tree/main/src">Github Repo</a></li>
+</ul>
+
+<body id="bod">
+    <section>
+        <pe id="ik1"></pe>
+    
+        <hr> &nbsp;
+        
+        <!-- InClass Exercies #1 -->
+        <article>
+            <div class="card">
+                <h3 id="prm">Part 1: Inverse Kinematics</h3>
+                <!-- <h4>Exercise #1</h4>  -->
+                <image src="../data/project3/banner.jpg" width="50%" height="50%"></image>
+            
+                <div class="container">
+                    <h4>Overview</h4>
+                    <p> 
+                        This project implements an inverse kinematics system utilizing the CCD method. <br> 
+                        The scene consists of an agent out of which multiple arms can go forth. <br>
+                        More detail on invdividual aspects can be found in the following sections. <br>
+                        The project was written in THREE.js and has a 3d scene, but most of the logic is done in 2d. <br>
+                        Features included in the project are:<br>
+                        - Multi-arm IK <br>
+                        - Joint Limits <br>
+                        - Obstacles <br>
+                        - User Interaction <br>
+                        - Moving IK <br>
+                        - Technically IK + Character Animation <br>
+                        For the single arm IK, the arm has 10 segments, each of length 10. <br>
+                        For the multi-arm IK, the main arm has 5 segments, and each sub arm have 5 segments as well. <br>
+                        <b id="ccd"></b>
+                    </p>
+                    <br>
+
+                    <h4>CCD</h4>
+                    <p>
+                        Cyclic Coordinate Descent was the method I used to implement Inverse Kinematics in this project. <br>
+                        The process of Cyclic Coordinate Descent is thus: <br><br>
+                        - Iterate from the end of the arm to the root <br>
+                        - At each joint calculate the vector to the goal and to the end effector <br>
+                        - Find the angle between those two vectors, and add it to the angle of the joint <br>
+                        - Update the position of every joint after this angle has been calculated <br>
+                        <br>
+                        The nice part about Cyclic Coordinate Descent is that it is pretty easy to implement <br>
+                            both angle restrictions and rotational limits. <br>
+                        In my implementation, both the angle and turn speed are limited. <br>
+                        The first segment in the arm is limited to a single angle relative to the kiwi agent. <br>
+                        This angle limitation makes it look like the arm is coming straight out of the kiwi, which I think looks pretty good :) <br>
+                        The rest of the angles are limited to +-30 degrees so that they have some movement, but not too much. <br>
+                        Additionally, the change in angle is limited by an acceleration variable set to 0.5. <br>
+                        Overall, I think these limitation make the lazer arm look pretty natural for what it is. <br>
+                        It's not necessarily human, but it works well for being a lazer that picks things up! <br> 
+                        <b id="over"></b>
+                    </p>
+                    <br>
+
+                    <video controls autoplay loop muted src="../data/project3/scene.mp4" alt="oiter..." width="50%" height="50%"></video>
+                    <h4>Interaction</h4>
+                    <p>
+                        Most of the scene is interaction--the above video shows off all these features. <br>
+                        The kiwi agent can be moved around using the following keys: <br><br>
+                        - w/a/s/d or up/down/left/right move the kiwi in the 4 directions <br>
+                        - the kiwi will follow the mouse <br>
+                        - holding left mouse button makes the IK arm / lazer go out from the kiwi and search for the nearest box(es). <br>
+                        - right mouse button can move around boxes when hovering over them. <br>
+                        - the GUI on the top right can toggle between single IK arm and split IK arm (two arms) <br>
+                        - the GUI can also unlock the camera, allowing the user to move around the scene <br><br>
+
+                        Once the lazer reaches a box that it is traveling towards, it picks up the box and will carry the box <br>
+                            until the user lets go of the left mouse button, at which point the IK arm will retract and the box will <br>
+                            be put down. <br><br>
+
+                        There is collision in the scene as well. The kiwi, boxes, and lazer will not go outside the walls. <br>
+                        Additionally, the lazer goes around the boxes. <br>
+                        All collisions use circular hitboxes for reasons that I will explain in the challenges section :) <br><br>
+
+                        The kiwi also has a walking cycle of his own, controlled by the animation mixer in THREE. <br>
+
+                        <b id="challenge"></b>
+                    </p>
+                    <br>
+
+                    <h4>Challenges</h4>
+                    <p>
+                        Woo boy. I am not at all happy with this. <br>
+                        There are so many aspects of this project that just did not go how I wanted them to. <br>
+                        The main thing that went wrong is I just did not have time, so many assignments in so many classes all at once...<br>
+                        But beyond that, I was just unsure how to go about much of this, or maybe wanted to do more than I could. <br>
+                        At first, I wanted to have full rigid body interaction along with 3d IK in the scene, however, this just proved to be infeasible. <br>
+                        Collision is kind of weird as well. <br>
+                        At first I was going to try to figure out how to make the boxes collided, but after realising I just did <br>
+                            not have the time to do that, I changed all the hitboxes to circles. <br>
+                        Even while doing this, the arm gets a bit wonky when around the boxes because I wasn't sure how to handle them having different angles. <br>
+                        Overall, I just really had to reign my sights in a bit if I wanted to get anything good out. <br>
+                        In the end I think it turned out okay but I idk its just not up to my standards. <br><br>
+                    </p>
+
+                    <div class="source">
+                        <a href="../src/project3-zips/water.zip">Source Code Zip</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h3 id="part2">Part 2: CCD vs FABRIK</h3>
+                <video controls autoplay loop muted src="../data/project3/comparison.mp4" alt="oiter..." width="50%" height="50%"></video>
+                <div class="container">
+                    <h4>Analysis</h4>
+                    <p> 
+                        For part 2, I implemented CCD and FABRIK. <br>
+                        As CCD was described above, I will only describe FABRIK in depth. <br>
+                        FABRIK, unlike CCD, doesn't use the angles of each limb to determine where to go, <br>
+                        in fact, FABRIK doesn't use the angles pretty much at all. <br>
+                        FABRIK consists of a backward pass and a forward pass. <br>
+                        In the backward pass, FABRIK sets the end effector position to be at the goal, <br>
+                        and updates all the other positions based on the end effectors position. <br>
+                        This leads to the root node no longer being at the origin, thus, FABRIK resets the start node <br>
+                        to the origin and makes the forward pass, updating all the nodes to now be in line. <br>
+                        It turns out this is a very efficient way of updating. <br>
+                        <br>
+                        There are some very noticeable differences between the two, even just in 2d. <br>
+                        The first is that CCD looks, well, more natural. <br>
+                        Even without any acceleration limitation or angle limits on either, CCD still has a bit <br>
+                        of a floatiness to it that you might find in an actual arm. <br>
+                        Because of the efficiency of FABRIK, it is very stiff and really reaches out towards the goal. <br>
+                        This might be of use in situations where speed to the goal matters, however, it does look slightly more unnatural. <br>
+                        <br>
+                        I didn't implement angle limits on the FABRIK implementation fully, however, I did try a little bit. <br>
+                        I can fully say that it is much harder to do angle limitations with FABRIK than it is with CCD. <br>
+                        With CCD, it is as easy as a couple if statements, however, it is much more involved with FABRIK. <br>
+                        As for whole complication, in the end, FABRIK was much easier to implement, and, really, much easier to understand. <br>
+                        There is not finding angles between two vectors with FABRIK or calling a function that updates everything for every iteration through the loop. <br>
+                        All that FABRIK is is reaching out to the goal, maybe a bit too far, then correcting. No angles to worry about. <br>
+                        While this makes it efficient and easy, as I mentioned before, it does look slightly more unnatural, at least with no constraints. <br>
+                        <br>
+                        Additionally, although I did not implement this aspect either (see the reasons above), it is clear to see that FABRIK would be much <br>
+                        easier to implement in 3d. There would be no need to worry about angles or quaternions, unless of course you were implementing constraints. <br>
+                        <br>
+                    </p>
+                </div>
+            </div>
+            <pe id="single"></pe>
+        </article>
+
+        <!-- Credits -->
+        <article>
+            <div class="card">
+                <h3 id="credits">Credits and Sources</h3>
+                <hr>
+                <div class="container">
+                    <p>
+                        <b>Website:</b> <br>
+                        All credit goes to Lauren Oliver for layout and colors. <br>
+                        (except the sticky header, that was Noah :p) <br>
+
+                        <br>
+                        
+                        <b>Part #1</b> <br>
+                        lightning: <a href="https://opengameart.org/content/lightning-s">opengameart</a><br>
+                        arena: <a href="https://www.spriters-resource.com/fullview/146176/">spriters-resource</a>
+                    </p>
+                    <br>
+                </div>
+            </div>
+        </article>
+    </section>
+    <script src="../scripts/script.js"></script>
+</body>
+
+<footer>
+    <a href="#top">Return to Top</a>
+    <a href="../index.html">Return to Home</a>
+</footer>
+
+</html>
